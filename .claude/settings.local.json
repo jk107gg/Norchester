@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ':*)",
+      "Bash(dir \"D:\\\\Orbit Vite Edition\" /b)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

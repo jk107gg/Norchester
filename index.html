@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Norchester University</title>
+  <link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       UNIVERSITY DISGUISE
+  ══════════════════════════════════════════ -->
+
+  <!-- Utility Bar -->
+  <div class="utility-bar">
+    <div class="utility-left">
+      <span>Norchester, NH 03101</span>
+      <span>+1 (603) 555-0192</span>
+    </div>
+    <div>
+      <a href="#" onclick="return false;">Prospective Students</a>
+      <a href="#" onclick="return false;">Alumni</a>
+      <a href="#" onclick="return false;">Faculty &amp; Staff</a>
+      <a href="#" onclick="openLogin()">My NorchU</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <a class="logo-block" href="#" onclick="switchPage('home'); return false;">
+      <div class="logo-seal" aria-hidden="true">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="16" stroke="#002147" stroke-width="1.5"/>
+          <path d="M18 6 L18 30" stroke="#002147" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M6 18 L30 18" stroke="#002147" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="4" fill="#002147"/>
+          <path d="M10 10 L26 26 M26 10 L10 26" stroke="#002147" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="logo-text-block">
+        <div class="logo-name">Norchester University</div>
+        <div class="logo-tagline">Established 2019 &mdash; New Hampshire</div>
+      </div>
+    </a>
+    <div class="header-actions">
+      <button class="btn btn-outline-gold" onclick="openLogin()">Portal Login</button>
+      <a href="#" class="btn btn-gold" onclick="switchPage('academics'); return false;">Apply Now</a>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <button class="nav-item active" id="nav-home"     onclick="switchPage('home')">Home</button>
+    <button class="nav-item"        id="nav-research"  onclick="switchPage('research')">Research</button>
+    <button class="nav-item"        id="nav-academics" onclick="switchPage('academics')">Academics</button>
+    <button class="nav-item"        id="nav-library"   onclick="switchPage('library')">Library</button>
+    <button class="nav-item"        id="nav-portal"    onclick="openLogin()">Student Portal</button>
+    <button class="nav-item"        id="nav-about"     onclick="switchPage('about')">About</button>
+    <div class="nav-search">
+      <input type="text" placeholder="Search Norchester…" onkeydown="if(event.key==='Enter') event.preventDefault();" />
+    </div>
+  </nav>
+
+  <!-- ── HOME PAGE ── -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-eyebrow">Norchester University — Est. 2019</div>
+        <h1>Where <em>bold ideas</em><br/>meet rigorous inquiry</h1>
+        <p>A dynamic research university shaping tomorrow's leaders in science, technology, policy, and the arts. Join our community of 2,340 students and 180 faculty in the heart of New Hampshire.</p>
+        <div class="hero-buttons">
+          <a href="#" class="btn-hero-primary" onclick="switchPage('academics'); return false;">Explore Programs</a>
+          <a href="#" class="btn-hero-secondary" onclick="switchPage('about'); return false;">Our Story</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-number">2,340</div><div class="stat-label">Students Enrolled</div></div>
+      <div class="stat"><div class="stat-number">48</div><div class="stat-label">Degree Programs</div></div>
+      <div class="stat"><div class="stat-number">180</div><div class="stat-label">Faculty Members</div></div>
+      <div class="stat"><div class="stat-number">$4.2M</div><div class="stat-label">Research Funding</div></div>
+    </div>
+
+    <section class="section">
+      <h2 class="section-title">Areas of Excellence</h2>
+      <p class="section-subtitle">Interdisciplinary inquiry across four signature research clusters</p>
+      <div class="section-divider"></div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-tag">Computer Science</div>
+          <h3>Applied AI &amp; Human-Computer Interaction</h3>
+          <p>Exploring intelligent systems, ethical machine learning, and interfaces that augment human capability in everyday life.</p>
+          <a href="#" class="card-link" onclick="switchPage('research'); return false;">Learn more</a>
+        </div>
+        <div class="card">
+          <div class="card-tag">Life Sciences</div>
+          <h3>Computational Biology &amp; Genomics</h3>
+          <p>Bridging biology and data science to decode complex biological systems and accelerate therapeutic discovery.</p>
+          <a href="#" class="card-link" onclick="switchPage('research'); return false;">Learn more</a>
+        </div>
+        <div class="card">
+          <div class="card-tag">Policy &amp; Society</div>
+          <h3>Technology Governance &amp; Public Policy</h3>
+          <p>Training a new generation of leaders who can navigate the regulatory and ethical dimensions of emerging technologies.</p>
+          <a href="#" class="card-link" onclick="switchPage('research'); return false;">Learn more</a>
+        </div>
+        <div class="card">
+          <div class="card-tag">Arts &amp; Humanities</div>
+          <h3>Digital Media &amp; Creative Technologies</h3>
+          <p>Fusing traditional artistic practice with digital tools to produce innovative work at the intersection of culture and code.</p>
+          <a href="#" class="card-link" onclick="switchPage('research'); return false;">Learn more</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="news-strip">
+      <div class="news-inner">
+        <h2 class="section-title" style="margin-bottom:1.5rem;">From the Newsroom</h2>
+        <div class="news-grid">
+          <div class="news-main">
+            <div class="news-date">April 10, 2026</div>
+            <h3>Professor Anand Receives NSF CAREER Award for Neuro-Symbolic AI Research</h3>
+            <p>Dr. Priya Anand of the Department of Computer Science has been awarded the prestigious NSF CAREER Award — the foundation's most prestigious honor for early-career faculty. Her project, "Interpretable Reasoning in Hybrid AI Systems," will receive $620,000 over five years to study how neural networks and symbolic reasoning systems can be combined to produce more transparent and reliable AI.</p>
+            <a href="#" class="card-link" onclick="return false;">Read full story</a>
+          </div>
+          <div>
+            <div class="news-side-item">
+              <div class="news-date">April 8, 2026</div>
+              <h4>Spring Research Symposium Registration Now Open</h4>
+              <p>Graduate and undergraduate students invited to submit abstracts by April 22.</p>
+            </div>
+            <div class="news-side-item">
+              <div class="news-date">April 5, 2026</div>
+              <h4>Norchester Partners with Regional Health Network on Data Initiative</h4>
+              <p>New three-year agreement to support predictive analytics in community health.</p>
+            </div>
+          </div>
+          <div>
+            <div class="news-side-item">
+              <div class="news-date">April 3, 2026</div>
+              <h4>Library Acquires Rare Collection of Early Computing Artifacts</h4>
+              <p>Donated by alumnus Marcus Webb, the collection spans 1955–1985.</p>
+            </div>
+            <div class="news-side-item">
+              <div class="news-date">March 31, 2026</div>
+              <h4>Commencement 2026: Save the Date — May 17</h4>
+              <p>Ceremony will be held outdoors on Whitmore Quad. Tickets available through the portal.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-banner">
+      <h2>Begin Your Norchester Journey</h2>
+      <p>Applications for the Fall 2026 cohort are open. Rolling admissions — apply when you're ready.</p>
+      <a href="#" class="btn-hero-primary" onclick="switchPage('academics'); return false;">View Admissions Info</a>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-name" style="font-family:var(--font-serif); font-size:1.05rem; color:white;">Norchester University</div>
+          <div class="logo-tagline" style="font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-light);">Established 2019</div>
+          <p>42 Whitmore Drive, Norchester, NH 03101<br/>+1 (603) 555-0192<br/>admissions@norchester.edu</p>
+        </div>
+        <div class="footer-col">
+          <h4>Academics</h4>
+          <a href="#" onclick="return false;">Undergraduate</a>
+          <a href="#" onclick="return false;">Graduate</a>
+          <a href="#" onclick="return false;">Online Programs</a>
+          <a href="#" onclick="return false;">Continuing Education</a>
+          <a href="#" onclick="return false;">Academic Calendar</a>
+        </div>
+        <div class="footer-col">
+          <h4>Campus Life</h4>
+          <a href="#" onclick="return false;">Housing &amp; Dining</a>
+          <a href="#" onclick="return false;">Student Organizations</a>
+          <a href="#" onclick="return false;">Health &amp; Wellness</a>
+          <a href="#" onclick="return false;">Athletics</a>
+          <a href="#" onclick="return false;">Career Services</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#" onclick="openLogin()">Student Portal</a>
+          <a href="#" onclick="switchPage('library')">Library</a>
+          <a href="#" onclick="return false;">IT Help Desk</a>
+          <a href="#" onclick="return false;">Campus Map</a>
+          <a href="#" onclick="return false;">Emergency Info</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Norchester University. All rights reserved.</span>
+        <span>Privacy Policy &middot; Accessibility &middot; Accreditation</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ── RESEARCH PAGE ── -->
+  <div class="page" id="page-research">
+    <div class="page-hero">
+      <h1>Research at Norchester</h1>
+      <p>Advancing knowledge through collaboration, curiosity, and rigorous inquiry</p>
+    </div>
+    <div class="content-body">
+      <div class="two-col">
+        <div>
+          <h2>Our Research Mission</h2>
+          <p>Norchester University has built a research culture from the ground up — one that prizes interdisciplinary work, mentorship of undergraduate researchers, and real-world impact. Since our founding in 2019, our faculty have secured over $4.2 million in external funding and published in leading peer-reviewed venues across disciplines.</p>
+          <p>Our small size is a strength. Faculty know their students. Collaboration happens across hallways, not just across departments.</p>
+          <div class="highlight-box"><p><strong>Open Call:</strong> The Office of Research is accepting proposals for the 2026 Internal Seed Grant program. Awards of up to $15,000 available. Deadline: May 1, 2026.</p></div>
+          <h3>Research Centers</h3>
+          <ul>
+            <li>Center for Intelligent Systems (CIS)</li>
+            <li>Norchester Institute for Policy &amp; Governance (NIPG)</li>
+            <li>Lab for Computational Life Sciences (CompBio Lab)</li>
+            <li>Digital Humanities &amp; Creative Technologies Studio</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Spotlight: Recent Work</h2>
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="card-tag">Computer Science · 2026</div>
+            <h3>Anand et al. — Neuro-Symbolic Fusion for Explainable Planning</h3>
+            <p>Published in AAAI 2026. Proposes a hybrid architecture that achieves state-of-the-art performance on three benchmark planning tasks while producing human-readable justifications.</p>
+          </div>
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="card-tag">Life Sciences · 2025</div>
+            <h3>Torres &amp; Kim — Single-Cell Transcriptomics in Aging Neural Tissue</h3>
+            <p>Published in <em>Nature Aging</em>. Identifies novel gene expression signatures associated with neurodegeneration onset in murine models.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Public Policy · 2025</div>
+            <h3>Mbeki — Algorithmic Accountability Frameworks in the EU</h3>
+            <p>Comparative analysis of AI regulatory frameworks across 12 European jurisdictions, examining enforcement mechanisms and stakeholder representation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="site-footer" style="margin-top:2rem;">
+      <div class="footer-bottom" style="max-width:1100px; margin:0 auto; padding: 1rem 0;">
+        <span>&copy; 2026 Norchester University.</span>
+        <span>Research Office: research@norchester.edu</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ── ACADEMICS PAGE ── -->
+  <div class="page" id="page-academics">
+    <div class="page-hero">
+      <h1>Academics</h1>
+      <p>48 degree programs across four schools and one college</p>
+    </div>
+    <div class="content-body">
+      <h2>Schools &amp; Programs</h2>
+      <div class="three-col" style="margin-top:1.5rem;">
+        <div class="card">
+          <div class="card-tag">School of</div>
+          <h3>Computing &amp; Information Science</h3>
+          <ul style="margin-top:0.5rem;">
+            <li>B.S. Computer Science</li>
+            <li>B.S. Data Science</li>
+            <li>B.S. Cybersecurity</li>
+            <li>M.S. Artificial Intelligence</li>
+            <li>M.S. Software Engineering</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-tag">School of</div>
+          <h3>Life Sciences &amp; Health</h3>
+          <ul style="margin-top:0.5rem;">
+            <li>B.S. Biology</li>
+            <li>B.S. Computational Biology</li>
+            <li>B.S. Neuroscience</li>
+            <li>M.S. Biomedical Informatics</li>
+            <li>M.S. Public Health Data</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-tag">School of</div>
+          <h3>Policy, Law &amp; Society</h3>
+          <ul style="margin-top:0.5rem;">
+            <li>B.A. Political Science</li>
+            <li>B.A. Public Policy</li>
+            <li>B.A. Sociology</li>
+            <li>M.P.P. Technology Policy</li>
+            <li>M.A. Ethics &amp; Technology</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-tag">College of</div>
+          <h3>Arts, Design &amp; Media</h3>
+          <ul style="margin-top:0.5rem;">
+            <li>B.F.A. Digital Media</li>
+            <li>B.A. Creative Writing</li>
+            <li>B.A. Music Technology</li>
+            <li>M.F.A. Interaction Design</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-tag">Division of</div>
+          <h3>Core Curriculum &amp; Liberal Arts</h3>
+          <ul style="margin-top:0.5rem;">
+            <li>B.A. Philosophy</li>
+            <li>B.A. Economics</li>
+            <li>B.A. History of Science</li>
+            <li>Interdisciplinary Studies (custom track)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-tag">Graduate</div>
+          <h3>Admissions Information</h3>
+          <p>Rolling admissions for most graduate programs. Applications reviewed on a first-come basis. GRE optional through 2027.</p>
+          <a href="#" class="card-link" onclick="openLogin(); return false;">Start Application</a>
+        </div>
+      </div>
+    </div>
+    <footer class="site-footer" style="margin-top:2rem;">
+      <div class="footer-bottom" style="max-width:1100px; margin:0 auto; padding: 1rem 0;">
+        <span>&copy; 2026 Norchester University.</span>
+        <span>Registrar: registrar@norchester.edu</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ── LIBRARY PAGE ── -->
+  <div class="page" id="page-library">
+    <div class="page-hero">
+      <h1>Hargrove Memorial Library</h1>
+      <p>Open 7 days a week &mdash; 620,000 volumes, 42 databases, 14 study rooms</p>
+    </div>
+    <div class="content-body">
+      <div class="two-col">
+        <div>
+          <h2>Library Services</h2>
+          <p>Hargrove Memorial Library supports the research and learning mission of Norchester University through comprehensive collections, expert librarians, and flexible study environments. Our liaison librarians are embedded in every academic department.</p>
+          <h3>Collections</h3>
+          <ul>
+            <li>620,000 print and digital volumes</li>
+            <li>42 licensed research databases (JSTOR, Scopus, ACM DL, and more)</li>
+            <li>Rare books &amp; archives — including the Webb Computing Collection</li>
+            <li>Interlibrary loan via NHLend network</li>
+          </ul>
+          <h3>Hours</h3>
+          <ul>
+            <li>Mon–Thu: 7:30 AM – 11:00 PM</li>
+            <li>Fri: 7:30 AM – 9:00 PM</li>
+            <li>Sat–Sun: 10:00 AM – 8:00 PM</li>
+          </ul>
+          <div class="highlight-box">
+            <p>24/7 online access to all databases available through the <a href="#" onclick="openLogin(); return false;" style="color:var(--navy-mid); font-weight:600;">Student Portal</a> with your NorchU credentials.</p>
+          </div>
+        </div>
+        <div>
+          <h2>Research Help</h2>
+          <p>Not sure where to start? Our reference librarians offer drop-in hours and one-on-one research consultations for all students and faculty.</p>
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="card-tag">Research Guides</div>
+            <h3>Subject-Specific Databases</h3>
+            <p>Curated by our liaison librarians. Covers CS, life sciences, policy, humanities, and more.</p>
+            <a href="#" class="card-link" onclick="openLogin(); return false;">Browse guides</a>
+          </div>
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="card-tag">Writing Support</div>
+            <h3>Citation &amp; Academic Integrity</h3>
+            <p>Workshops on APA, MLA, and Chicago style. Plagiarism detection via Turnitin available for all papers.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">Technology</div>
+            <h3>Equipment Lending</h3>
+            <p>Laptops, calculators, audio recorders, and camera kits available for 72-hour checkout with a valid student ID.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="site-footer" style="margin-top:2rem;">
+      <div class="footer-bottom" style="max-width:1100px; margin:0 auto; padding: 1rem 0;">
+        <span>&copy; 2026 Norchester University.</span>
+        <span>Library: library@norchester.edu · (603) 555-0198</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ── ABOUT PAGE ── -->
+  <div class="page" id="page-about">
+    <div class="page-hero">
+      <h1>About Norchester University</h1>
+      <p>A young institution with a clear sense of purpose</p>
+    </div>
+    <div class="content-body">
+      <div class="two-col">
+        <div>
+          <h2>Our Story</h2>
+          <p>Norchester University was founded in 2019 by a coalition of researchers, educators, and community leaders who believed that New Hampshire deserved a research university built for the 21st century — one that didn't inherit the inertia of older institutions.</p>
+          <p>From day one, we made deliberate choices: small cohort sizes, no graduate student teaching assistants teaching core courses, a mandatory interdisciplinary core curriculum, and a commitment to placing every undergraduate in a mentored research or practicum experience before graduation.</p>
+          <p>Five years in, with 2,340 students, 180 faculty, and our first doctoral graduates, we remain committed to proving that a young institution can compete on quality of ideas.</p>
+          <div class="highlight-box">
+            <p><em>"We built Norchester to answer a question: what does a university look like when you design it from scratch, knowing what we know now?"</em><br/><span style="font-size:0.8rem; color:var(--gray-mid); display:block; margin-top:0.4rem;">— Dr. Celeste Okafor, Founding President</span></p>
+          </div>
+        </div>
+        <div>
+          <h2>Leadership</h2>
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="card-tag">President</div>
+            <h3>Dr. Celeste Okafor</h3>
+            <p>Former Dean of Graduate Studies at Carnegie Mellon. Specializes in higher education policy and organizational design. Joined Norchester as a founding member in 2018.</p>
+          </div>
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="card-tag">Provost</div>
+            <h3>Prof. Daniel Svensson</h3>
+            <p>Computational linguist and former director of the Language Technologies Institute. Oversees all academic programs and faculty appointments.</p>
+          </div>
+          <div class="card">
+            <div class="card-tag">VP Research</div>
+            <h3>Dr. Yuki Tanaka</h3>
+            <p>Previously a principal researcher at a national laboratory. Leads the university's research strategy, grant development, and external partnerships.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="site-footer" style="margin-top:2rem;">
+      <div class="footer-bottom" style="max-width:1100px; margin:0 auto; padding: 1rem 0;">
+        <span>&copy; 2026 Norchester University.</span>
+        <span>Communications: press@norchester.edu</span>
+      </div>
+    </footer>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       LOGIN MODAL
+  ══════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="loginModal" onclick="handleBackdropClick(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <div class="modal-header">
+        <div>
+          <h3 id="loginTitle">NorchU Portal Sign In</h3>
+          <p>Norchester University Student &amp; Faculty Portal</p>
+        </div>
+        <button class="modal-close" onclick="closeLogin()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="error-msg" id="loginError"></div>
+        <div class="form-group">
+          <label for="loginUser">University ID or Email</label>
+          <input type="text" id="loginUser" placeholder="e.g. jsmith@norchester.edu" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label for="loginPass">Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••••" autocomplete="off"
+                 onkeydown="if(event.key==='Enter') attemptLogin();" />
+        </div>
+        <button class="btn-login" onclick="attemptLogin()">Sign In</button>
+        <div class="modal-footer-note">
+          <a href="#" onclick="return false;">Forgot password?</a> &nbsp;&middot;&nbsp;
+          <a href="#" onclick="return false;">Need help?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       GAME OVERLAY
+  ══════════════════════════════════════════ -->
+  <div id="gameOverlay" role="dialog" aria-modal="true" aria-label="Orbit">
+
+    <!-- Left Sidebar -->
+    <div id="gameSidebar">
+
+      <!-- Logo -->
+      <div class="sb-header">
+        <div class="sb-logo-mark">OR<span>B</span>IT</div>
+        <div class="sb-logo-sub">Game Platform</div>
+      </div>
+
+      <!-- Search -->
+      <div class="sb-search">
+        <div class="sb-search-wrap">
+          <span class="sb-search-icon">⌕</span>
+          <input class="sb-search-input" type="text" placeholder="Search games…"
+                 id="sbSearchInput" oninput="filterGames(this.value)"
+                 onkeydown="event.stopPropagation();" />
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div class="sb-profile">
+        <button class="sb-profile-btn" onclick="toggleProfileDropdown(event)">
+          <div class="sb-avatar" id="sbAvatar">G</div>
+          <span class="sb-username" id="sbUsername">Guest</span>
+          <span class="sb-profile-chevron">▾</span>
+        </button>
+        <div class="profile-dropdown" id="profileDropdown"></div>
+      </div>
+
+      <!-- Scrollable nav -->
+      <div class="sb-scroll" id="sbScroll">
+
+        <!-- Navigation -->
+        <div class="sb-label">Navigate</div>
+
+        <div class="sb-item active" id="nav-home" onclick="selectSidebarItem(this)" data-label="Home">
+          <span class="sb-item-icon">⌂</span>
+          <span class="sb-item-label">Home</span>
+        </div>
+        <div class="sb-item" id="nav-aichat" onclick="selectSidebarItem(this)" data-label="AI Chat">
+          <span class="sb-item-icon">✦</span>
+          <span class="sb-item-label">AI Chat</span>
+        </div>
+        <div class="sb-item" id="nav-globalchat" onclick="selectSidebarItem(this)" data-label="Global Chat">
+          <span class="sb-item-icon">◎</span>
+          <span class="sb-item-label">Global Chat</span>
+        </div>
+        <div class="sb-item" id="nav-dm" onclick="selectSidebarItem(this)" data-label="Direct Messages">
+          <span class="sb-item-icon">◈</span>
+          <span class="sb-item-label">Direct Messages</span>
+        </div>
+        <div class="sb-item" id="nav-settings" onclick="selectSidebarItem(this)" data-label="Settings">
+          <span class="sb-item-icon">⚙</span>
+          <span class="sb-item-label">Settings</span>
+        </div>
+        <div class="sb-item" id="nav-changelog" onclick="selectSidebarItem(this)" data-label="Changelog">
+          <span class="sb-item-icon">◉</span>
+          <span class="sb-item-label">Changelog</span>
+        </div>
+        <div class="sb-item" id="nav-suggestions" onclick="selectSidebarItem(this)" data-label="Suggestions">
+          <span class="sb-item-icon">◇</span>
+          <span class="sb-item-label">Suggestions</span>
+        </div>
+
+        <!-- Games list -->
+        <div class="sb-label">
+          Games <span class="sb-label-count" id="gamesCount">34</span>
+        </div>
+
+        <div id="gamesList">
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Tetrix"><span class="sb-item-icon">▦</span><span class="sb-item-label">Tetrix</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Neon Snake"><span class="sb-item-icon">◈</span><span class="sb-item-label">Neon Snake</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="2048"><span class="sb-item-icon">⬡</span><span class="sb-item-label">2048</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Minefield"><span class="sb-item-icon">⚡</span><span class="sb-item-label">Minefield</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Flapbird"><span class="sb-item-icon">▶</span><span class="sb-item-label">Flapbird</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Brickout"><span class="sb-item-icon">▦</span><span class="sb-item-label">Brickout</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Pac-Grid"><span class="sb-item-icon">◉</span><span class="sb-item-label">Pac-Grid</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Starblast"><span class="sb-item-icon">✦</span><span class="sb-item-label">Starblast</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Pong Duel"><span class="sb-item-icon">◎</span><span class="sb-item-label">Pong Duel</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Chess Classic"><span class="sb-item-icon">♟</span><span class="sb-item-label">Chess Classic</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Sudoku Pro"><span class="sb-item-icon">▦</span><span class="sb-item-label">Sudoku Pro</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Wordcraft"><span class="sb-item-icon">◇</span><span class="sb-item-label">Wordcraft</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Memory Grid"><span class="sb-item-icon">⬡</span><span class="sb-item-label">Memory Grid</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Card Solitaire"><span class="sb-item-icon">◈</span><span class="sb-item-label">Card Solitaire</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Mahjong Tiles"><span class="sb-item-icon">▦</span><span class="sb-item-label">Mahjong Tiles</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Tic Tac Toe"><span class="sb-item-icon">✕</span><span class="sb-item-label">Tic Tac Toe</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Column Drop"><span class="sb-item-icon">▼</span><span class="sb-item-label">Column Drop</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Sea Battle"><span class="sb-item-icon">◉</span><span class="sb-item-label">Sea Battle</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Tower Rush"><span class="sb-item-icon">⬡</span><span class="sb-item-label">Tower Rush</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Cookie Empire"><span class="sb-item-icon">∞</span><span class="sb-item-label">Cookie Empire</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="TypeSpeed"><span class="sb-item-icon">▶</span><span class="sb-item-label">TypeSpeed</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Asteroid Field"><span class="sb-item-icon">✦</span><span class="sb-item-label">Asteroid Field</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Bubble Pop"><span class="sb-item-icon">◎</span><span class="sb-item-label">Bubble Pop</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Mole Hunt"><span class="sb-item-icon">⚡</span><span class="sb-item-label">Mole Hunt</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Color Simon"><span class="sb-item-icon">◈</span><span class="sb-item-label">Color Simon</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Hangman"><span class="sb-item-icon">◇</span><span class="sb-item-label">Hangman</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Blackjack 21"><span class="sb-item-icon">♠</span><span class="sb-item-label">Blackjack 21</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Pixel Dungeon"><span class="sb-item-icon">▦</span><span class="sb-item-label">Pixel Dungeon</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Number Slide"><span class="sb-item-icon">⬡</span><span class="sb-item-label">Number Slide</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Word Hunt"><span class="sb-item-icon">◇</span><span class="sb-item-label">Word Hunt</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Gravity Shift"><span class="sb-item-icon">▼</span><span class="sb-item-label">Gravity Shift</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Orbit Classic"><span class="sb-item-icon">◉</span><span class="sb-item-label">Orbit Classic</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Idle Kingdom"><span class="sb-item-icon">∞</span><span class="sb-item-label">Idle Kingdom</span></div>
+          <div class="sb-item game-item" onclick="selectSidebarItem(this)" data-label="Hex Merge"><span class="sb-item-icon">⬡</span><span class="sb-item-label">Hex Merge</span></div>
+        </div>
+
+      </div><!-- /sb-scroll -->
+
+      <!-- Footer: themes + ESC hint -->
+      <div class="sb-footer">
+        <div class="sb-theme-row" id="themeRow">
+          <span class="sb-theme-dot active" style="background:#4f8ef7;" title="Default"   onclick="setTheme('#4f8ef7',this)"></span>
+          <span class="sb-theme-dot"        style="background:#c8c8e8;" title="Midnight"  onclick="setTheme('#c8c8e8',this)"></span>
+          <span class="sb-theme-dot"        style="background:#7c3aed;" title="Blackhole" onclick="setTheme('#7c3aed',this)"></span>
+          <span class="sb-theme-dot"        style="background:#8b00ff;" title="Purple"    onclick="setTheme('#8b00ff',this)"></span>
+          <span class="sb-theme-dot"        style="background:#22d3a0;" title="Green"     onclick="setTheme('#22d3a0',this)"></span>
+          <span class="sb-theme-dot"        style="background:#dc2626;" title="Red"       onclick="setTheme('#dc2626',this)"></span>
+          <span class="sb-theme-dot"        style="background:#f0c060;" title="Gold"      onclick="setTheme('#f0c060',this)"></span>
+          <span class="sb-theme-dot"        style="background:#60a5fa;" title="White"     onclick="setTheme('#60a5fa',this)"></span>
+          <span class="sb-theme-dot"        style="background:#ffffff;" title="B&amp;W"   onclick="setTheme('#ffffff',this)"></span>
+        </div>
+        <div class="sb-esc-hint">Press <kbd>Esc</kbd> to close</div>
+      </div>
+
+    </div><!-- /gameSidebar -->
+
+    <!-- Main Content -->
+    <div id="gameMain">
+      <div class="game-topbar">
+        <div class="game-topbar-dot"></div>
+        <orbit-limelight-nav id="overlayLimelightNav"></orbit-limelight-nav>
+        <!-- topbarTitle kept hidden — JS still references it -->
+        <span id="topbarTitle" style="display:none">Home</span>
+        <div class="game-topbar-spacer"></div>
+        <button class="game-close-btn" onclick="closeOverlay()">ESC — Close</button>
+      </div>
+      <div class="game-content-area">
+
+        <!-- ── Home Panel ── -->
+        <div class="g-panel active" id="homePanel">
+          <canvas id="starfieldCanvas"></canvas>
+          <div class="home-scroll" id="homeScroll">
+
+            <h1 class="home-heading">Orbit</h1>
+            <p class="home-subheading">34 games &nbsp;·&nbsp; play anything, anywhere</p>
+
+            <div class="home-stats-row">
+              <div class="stat-pill">
+                <span class="stat-pill-val">34</span>
+                <span class="stat-pill-lbl">Games</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-pill-val" id="statStreak">0</span>
+                <span class="stat-pill-lbl">Day Streak</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-pill-val" id="statToday">0</span>
+                <span class="stat-pill-lbl">Played Today</span>
+              </div>
+            </div>
+
+            <div class="home-search-wrap">
+              <span class="home-search-icon">⌕</span>
+              <input class="home-search-input" type="text" id="homeSearch"
+                     placeholder="Search 34 games…"
+                     oninput="homeSearchFilter(this.value)"
+                     onkeydown="event.stopPropagation();" />
+            </div>
+
+            <div class="home-section-lbl">Recently Played</div>
+            <div class="recent-chips-row" id="recentChips"></div>
+
+            <div class="home-featured-row">
+              <div class="featured-card" id="featuredCard"></div>
+              <div class="ai-bot-card">
+                <div class="ai-bot-avatar">✦</div>
+                <div class="ai-bot-name">Orbit AI</div>
+                <div class="ai-bot-desc">Ask for game recommendations, tips, or just chat. Orbit AI knows every game on the platform.</div>
+                <div class="ai-bot-status"><div class="ai-bot-status-dot"></div> Online — ready to help</div>
+                <button class="ai-bot-btn" onclick="selectSidebarItem(document.getElementById('nav-aichat'))">Open AI Chat →</button>
+              </div>
+            </div>
+
+            <div class="home-filter-row" id="catFilterRow">
+              <button class="cat-pill active" data-cat="All"    onclick="setCat('All',this)">All</button>
+              <button class="cat-pill" data-cat="Arcade"  onclick="setCat('Arcade',this)">Arcade</button>
+              <button class="cat-pill" data-cat="Horror"  onclick="setCat('Horror',this)">Horror</button>
+              <button class="cat-pill" data-cat="Puzzle"  onclick="setCat('Puzzle',this)">Puzzle</button>
+              <button class="cat-pill" data-cat="Rhythm"  onclick="setCat('Rhythm',this)">Rhythm</button>
+              <button class="cat-pill" data-cat="Racing"  onclick="setCat('Racing',this)">Racing</button>
+              <button class="cat-pill" data-cat="Classic" onclick="setCat('Classic',this)">Classic</button>
+              <button class="cat-pill" data-cat="RPG"     onclick="setCat('RPG',this)">RPG</button>
+              <button class="cat-pill" data-cat="Chill"   onclick="setCat('Chill',this)">Chill</button>
+              <button class="cat-pill" data-cat="Sports"  onclick="setCat('Sports',this)">Sports</button>
+              <button class="cat-pill" data-cat="Fun"     onclick="setCat('Fun',this)">Fun</button>
+              <button class="random-btn" onclick="playRandom()">⚄ Random</button>
+            </div>
+
+            <div class="home-grid" id="homeGrid"></div>
+
+          </div><!-- /home-scroll -->
+        </div><!-- /homePanel -->
+
+        <!-- ── AI Chat Panel ── -->
+        <div class="g-panel" id="aiChatPanel">
+          <div class="ac-wrap" id="acWrap">
+            <div class="ac-glow" id="acGlow"></div>
+            <div class="ac-messages" id="acMessages">
+              <div class="ac-empty" id="acEmpty">
+                <div class="ac-empty-icon">✦</div>
+                <div class="ac-empty-title">Orbit AI</div>
+                <div class="ac-empty-sub">Ask for game recommendations, tips, or anything about the platform.</div>
+                <div class="ac-suggestions">
+                  <div class="ac-suggestion-chip" onclick="acSendSuggestion('What games should I play?')">What should I play?</div>
+                  <div class="ac-suggestion-chip" onclick="acSendSuggestion('What are the most popular games?')">Most popular games</div>
+                  <div class="ac-suggestion-chip" onclick="acSendSuggestion('Tips for Tetrix')">Tips for Tetrix</div>
+                  <div class="ac-suggestion-chip" onclick="acSendSuggestion('Recommend a chill game')">Something chill</div>
+                </div>
+              </div>
+            </div>
+            <div class="ac-input-area">
+              <div class="ac-cmd-palette" id="acCmdPalette">
+                <div class="ac-cmd-item" onclick="acSelectCmd('/recommend')">
+                  <span class="ac-cmd-slash">/recommend</span>
+                  <span class="ac-cmd-desc">Get a game recommendation</span>
+                </div>
+                <div class="ac-cmd-item" onclick="acSelectCmd('/popular')">
+                  <span class="ac-cmd-slash">/popular</span>
+                  <span class="ac-cmd-desc">Show most-played games</span>
+                </div>
+                <div class="ac-cmd-item" onclick="acSelectCmd('/random')">
+                  <span class="ac-cmd-slash">/random</span>
+                  <span class="ac-cmd-desc">Suggest a random game</span>
+                </div>
+                <div class="ac-cmd-item" onclick="acSelectCmd('/tips')">
+                  <span class="ac-cmd-slash">/tips</span>
+                  <span class="ac-cmd-desc">Tips for a specific game</span>
+                </div>
+              </div>
+              <div class="ac-input-box">
+                <div class="ac-chips-row" id="acChipsRow"></div>
+                <textarea
+                  class="ac-textarea" id="acTextarea"
+                  placeholder="Message Orbit AI…" rows="1"
+                  onkeydown="acKeydown(event)"
+                  oninput="acOnInput(this)"
+                ></textarea>
+                <div class="ac-action-row">
+                  <div class="ac-action-left">
+                    <button class="ac-action-btn" onclick="acAddChip()" title="Attach game context">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M6 3v6M3 6h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                      Attach
+                    </button>
+                    <span class="ac-model-label">Orbit AI · v1</span>
+                  </div>
+                  <button class="ac-send-btn" id="acSendBtn" onclick="acSend()">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5v9M6 1.5L2.5 5M6 1.5L9.5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Global Chat Panel ── -->
+        <div class="g-panel" id="globalChatPanel">
+          <div class="ch-wrap" style="display:flex;flex-direction:column;height:100%;font-family:var(--orbit-ui);">
+            <div class="gc-online-bar">
+              <span class="gc-online-label">Online</span>
+              <span class="gc-online-count" id="gcOnlineCount">0</span>
+              <div class="gc-online-pills" id="gcOnlinePills"></div>
+            </div>
+            <div class="gc-msgs" id="gcMsgs">
+              <div class="gc-empty-msg">Connecting…</div>
+            </div>
+            <div class="gc-typing-bar" id="gcTypingBar"></div>
+            <div class="gc-input-area">
+              <div class="gc-reply-bar" id="gcReplyBar">
+                <span class="gc-reply-bar-user" id="gcReplyUser"></span>
+                <span class="gc-reply-bar-text" id="gcReplyText"></span>
+                <button class="gc-reply-close" onclick="gcClearReply()">×</button>
+              </div>
+              <div class="gc-gif-picker" id="gcGifPicker">
+                <div class="gc-gif-search-wrap">
+                  <input class="gc-gif-search" id="gcGifSearch" placeholder="Search GIFs…"
+                    oninput="gcSearchGifs(this.value)" onkeydown="event.stopPropagation()"/>
+                </div>
+                <div class="gc-gif-grid" id="gcGifGrid"></div>
+              </div>
+              <div class="gc-mention-dropdown" id="gcMentionDropdown"></div>
+              <div class="gc-input-box">
+                <div id="gcGifChipWrap"></div>
+                <div class="gc-input-row">
+                  <div class="gc-input-actions">
+                    <button class="gc-toolbar-btn" onclick="gcToggleGifPicker()" title="GIF">GIF</button>
+                    <button class="gc-toolbar-btn" onclick="gcTriggerImageUpload()" title="Image">⊕</button>
+                    <input type="file" id="gcImageInput" accept="image/*" style="display:none" onchange="gcHandleImage(this)"/>
+                  </div>
+                  <textarea class="gc-textarea" id="gcTextarea"
+                    placeholder="Message everyone…" rows="1"
+                    onkeydown="gcKeydown(event)"
+                    oninput="gcOnInput(this)"></textarea>
+                  <button class="gc-send-btn" id="gcSendBtn" onclick="gcSend()">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M5.5 1L2 4.5M5.5 1L9 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DM Panel ── -->
+        <div class="g-panel" id="dmPanel">
+          <div class="dm-sidebar">
+            <div class="dm-sidebar-header">
+              <div class="dm-sidebar-title">Direct Messages</div>
+            </div>
+            <div class="dm-user-list" id="dmUserList">
+              <div style="padding:1rem 0.75rem;font-size:0.68rem;color:rgba(255,255,255,0.12);font-family:var(--orbit-ui)">No users online</div>
+            </div>
+          </div>
+          <div class="dm-main">
+            <div class="dm-no-chat" id="dmNochat">
+              <div class="dm-no-chat-icon">✉</div>
+              <div class="dm-no-chat-text">Select a user to start chatting</div>
+            </div>
+            <div class="dm-msg-area" id="dmMsgArea" style="display:none">
+              <div class="dm-header" id="dmHeader"></div>
+              <div class="dm-msgs" id="dmMsgs"></div>
+              <div class="dm-input-area">
+                <div class="dm-input-box">
+                  <textarea class="dm-textarea" id="dmTextarea"
+                    placeholder="Message…" rows="1"
+                    onkeydown="dmKeydown(event)"
+                    oninput="dmOnInput(this)"></textarea>
+                  <button class="gc-send-btn" id="dmSendBtn" onclick="dmSend()">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M5.5 1L2 4.5M5.5 1L9 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Settings Panel ── -->
+        <div class="g-panel" id="settingsPanel">
+          <div class="settings-scroll" id="settingsScroll">
+            <div class="settings-heading">Settings</div>
+            <div class="settings-sub">Customize your Orbit experience</div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Appearance</div>
+              <div style="margin-bottom:1rem">
+                <div class="settings-row-label" style="margin-bottom:0.55rem">Theme</div>
+                <div class="settings-theme-grid" id="settingsThemeGrid"></div>
+              </div>
+              <div style="margin-bottom:1rem">
+                <div class="settings-row-label" style="margin-bottom:0.55rem">Font</div>
+                <div class="settings-font-grid">
+                  <div class="settings-font-tile active" data-font="'DM Sans',system-ui,sans-serif" onclick="setFont(this)">
+                    <div class="settings-font-preview" style="font-family:'DM Sans',sans-serif">Aa</div>
+                    <div class="settings-font-name">DM Sans</div>
+                  </div>
+                  <div class="settings-font-tile" data-font="'Outfit',system-ui,sans-serif" onclick="setFont(this)">
+                    <div class="settings-font-preview" style="font-family:'Outfit',sans-serif">Aa</div>
+                    <div class="settings-font-name">Outfit</div>
+                  </div>
+                  <div class="settings-font-tile" data-font="'EB Garamond',Georgia,serif" onclick="setFont(this)">
+                    <div class="settings-font-preview" style="font-family:'EB Garamond',serif">Aa</div>
+                    <div class="settings-font-name">Garamond</div>
+                  </div>
+                  <div class="settings-font-tile" data-font="system-ui,sans-serif" onclick="setFont(this)">
+                    <div class="settings-font-preview" style="font-family:system-ui">Aa</div>
+                    <div class="settings-font-name">System UI</div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-bottom:0.2rem">
+                <div class="settings-row-label" style="margin-bottom:0.45rem">Brightness</div>
+                <div style="display:flex;align-items:center;gap:0.75rem">
+                  <input type="range" class="settings-slider" id="brightnessSlider" min="50" max="120" value="100"
+                    oninput="setBrightness(this.value)" onkeydown="event.stopPropagation()"/>
+                  <span id="brightnessVal" style="font-size:0.68rem;color:rgba(255,255,255,0.32);min-width:34px;font-family:var(--orbit-ui)">100%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Your Stats</div>
+              <div class="settings-stats-grid" style="margin-bottom:1.1rem">
+                <div class="settings-stat-box">
+                  <div class="settings-stat-val" id="stTotalPlayed">0</div>
+                  <div class="settings-stat-lbl">Played</div>
+                </div>
+                <div class="settings-stat-box">
+                  <div class="settings-stat-val" id="stFavCount">0</div>
+                  <div class="settings-stat-lbl">Favorites</div>
+                </div>
+                <div class="settings-stat-box">
+                  <div class="settings-stat-val" id="stStreakVal">0</div>
+                  <div class="settings-stat-lbl">Streak</div>
+                </div>
+              </div>
+              <div class="settings-row-label" style="margin-bottom:0.5rem;font-size:0.7rem">Activity — last 7 days</div>
+              <div class="playtime-chart" id="playtimeChart"></div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Platform</div>
+              <div class="settings-stats-grid" style="margin-bottom:1.1rem">
+                <div class="settings-stat-box">
+                  <div class="settings-stat-val" id="siteStatUsers">—</div>
+                  <div class="settings-stat-lbl">Users</div>
+                </div>
+                <div class="settings-stat-box">
+                  <div class="settings-stat-val" id="siteStatMsgs">—</div>
+                  <div class="settings-stat-lbl">Messages</div>
+                </div>
+                <div class="settings-stat-box">
+                  <div class="settings-stat-val" id="siteStatOnline">0</div>
+                  <div class="settings-stat-lbl">Online</div>
+                </div>
+              </div>
+              <div class="settings-row-label" style="margin-bottom:0.45rem">Friend Code</div>
+              <div class="settings-friend-code" style="margin-bottom:0.9rem">
+                <span class="settings-fc-val" id="settingsFriendCode">———</span>
+                <button class="settings-fc-copy" id="fcCopyBtn" onclick="copyFriendCode()">⎘ Copy</button>
+              </div>
+              <div class="settings-row-label" style="margin-bottom:0.45rem">Add Friend</div>
+              <div style="display:flex;gap:0.45rem">
+                <input class="admin-input" id="addFriendInput" placeholder="Enter friend code…" maxlength="8" style="flex:1" onkeydown="event.stopPropagation()"/>
+                <button class="settings-btn accent" onclick="addFriend()">Add</button>
+              </div>
+              <div class="admin-status" id="addFriendStatus"></div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Preferences</div>
+              <div class="settings-row">
+                <div>
+                  <div class="settings-row-label">Notifications</div>
+                  <div class="settings-row-sub">Chat message alerts</div>
+                </div>
+                <orbit-switch id="notifToggle" aria-label="Notifications"></orbit-switch>
+              </div>
+              <div style="display:flex;gap:0.45rem;flex-wrap:wrap;margin-top:0.4rem">
+                <button class="settings-btn danger" onclick="resetStats()">Reset Stats</button>
+                <button class="settings-btn danger" onclick="clearRecents()">Clear Recents</button>
+                <button class="settings-btn" onclick="exportData()">Export Data</button>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Admin Broadcast</div>
+              <div style="display:flex;flex-direction:column;gap:0.5rem">
+                <input type="password" class="admin-input" id="adminPassInput" placeholder="Admin password…" style="width:100%" onkeydown="event.stopPropagation()"/>
+                <input type="text" class="admin-input" id="adminMsgInput" placeholder="Broadcast message…" style="width:100%" onkeydown="event.stopPropagation()"/>
+                <div><button class="settings-btn accent" onclick="adminBroadcast()">Send Broadcast</button></div>
+                <div class="admin-status" id="adminStatus"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── Suggestions Panel ── -->
+        <div class="g-panel" id="suggestionsPanel">
+          <div class="sug-scroll">
+            <div class="sug-heading">Suggestions</div>
+            <div class="sug-sub">Have an idea or found a bug? Drop it here.</div>
+            <div class="sug-form">
+              <div class="sug-tags-row">
+                <button class="sug-tag-pill active" data-tag="feature" onclick="setSugTag('feature',this)">🔧 Feature</button>
+                <button class="sug-tag-pill" data-tag="game" onclick="setSugTag('game',this)">🎮 Game</button>
+                <button class="sug-tag-pill" data-tag="bug" onclick="setSugTag('bug',this)">🐛 Bug</button>
+                <button class="sug-tag-pill" data-tag="other" onclick="setSugTag('other',this)">💬 Other</button>
+              </div>
+              <textarea class="sug-textarea" id="sugTextarea" placeholder="What's on your mind? Be specific…" maxlength="500"
+                oninput="sugCharCount(this)" onkeydown="event.stopPropagation()"></textarea>
+              <div class="sug-form-footer">
+                <span class="sug-char-count" id="sugCharCountEl">0 / 500</span>
+                <button class="sug-submit-btn" id="sugSubmitBtn" onclick="submitSuggestion()">Submit</button>
+              </div>
+            </div>
+            <div class="sug-section-title">Recent Suggestions</div>
+            <div class="sug-list" id="sugList">
+              <div style="font-size:0.7rem;color:rgba(255,255,255,0.1);padding:0.5rem 0">Loading…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Placeholder Panel ── -->
+        <div class="g-panel" id="placeholderPanel">
+          <div class="game-placeholder">
+            <div class="game-placeholder-icon" id="phIcon">◈</div>
+            <h2 id="phTitle">Coming Soon</h2>
+            <p id="phSub">This feature will be available in a future update.</p>
+          </div>
+        </div>
+
+      </div><!-- /game-content-area -->
+    </div>
+
+  </div>
+
+
+  <!-- Auth Modal -->
+  <div class="auth-modal" id="authModal" data-tab="signin">
+    <div class="auth-box">
+      <button class="auth-close-btn" onclick="closeAuthModal()">×</button>
+      <div class="auth-box-title">Orbit Account</div>
+      <div class="auth-box-sub" id="authBoxSub">Welcome back</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="signin" onclick="setAuthTab('signin')">Sign In</button>
+        <button class="auth-tab" data-tab="register" onclick="setAuthTab('register')">Register</button>
+      </div>
+      <div class="auth-field">
+        <label>Username</label>
+        <input class="auth-input" id="authUsernameInput" type="text" placeholder="your_username" autocomplete="username" onkeydown="event.stopPropagation(); if(event.key==='Enter') authSubmit()"/>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input class="auth-input" id="authPasswordInput" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="event.stopPropagation(); if(event.key==='Enter') authSubmit()"/>
+      </div>
+      <div class="auth-error" id="authError"></div>
+      <button class="auth-btn" id="authSubmitBtn" onclick="authSubmit()">Sign In</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+  <!-- Orbit UI Components -->
+  <script src="/src/components/ui/interfaces-switch.js"></script>
+  <script src="/src/components/ui/breadcrumb.js"></script>
+  <script src="/src/components/ui/limelight-nav.js"></script>
+
+  <!-- ══════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════ -->
+  <script src="/src/main.js"></script>
+
+</body>
+</html>
