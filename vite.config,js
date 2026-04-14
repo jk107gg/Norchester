@@ -1,14 +1,5 @@
-<<<<<<< HEAD
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  // This ensures the generated paths in your index.html point to the right place
-  base: '/Norchester/', 
-=======
-import { defineConfig } from 'vite'
-
-export default defineConfig({
-  // This ensures the generated paths in your index.html point to the right place
-  base: '/Norchester/', 
->>>>>>> 7579759 (Initialize git and add deployment workflow)
+  base: '/Norchester/', // This must match your repo name exactly
 })
