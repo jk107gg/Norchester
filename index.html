@@ -534,6 +534,10 @@
           <span class="sb-item-icon">◇</span>
           <span class="sb-item-label">Suggestions</span>
         </div>
+        <div class="sb-item" id="nav-pricing" onclick="selectSidebarItem(this)" data-label="Pricing">
+          <span class="sb-item-icon">◆</span>
+          <span class="sb-item-label">Pricing</span>
+        </div>
 
         <!-- Games list -->
         <div class="sb-label">
@@ -965,6 +969,34 @@
             <div class="sug-list" id="sugList">
               <div style="font-size:0.7rem;color:rgba(255,255,255,0.1);padding:0.5rem 0">Loading…</div>
             </div>
+          </div>
+        </div>
+
+        <!-- ── Pricing Panel ── -->
+        <div class="g-panel" id="pricingPanel">
+          <canvas class="pr-canvas" id="pricingCanvas"></canvas>
+          <div class="pr-accent-lines" aria-hidden>
+            <div class="pr-hline"></div>
+            <div class="pr-hline"></div>
+            <div class="pr-hline"></div>
+            <div class="pr-vline"></div>
+            <div class="pr-vline"></div>
+            <div class="pr-vline"></div>
+          </div>
+          <div class="pr-vignette"></div>
+          <div class="pr-scroll">
+            <div class="pr-header">
+              <div class="pr-eyebrow">Plans &amp; Pricing</div>
+              <h2 class="pr-title">Unlock the full Orbit experience</h2>
+              <p class="pr-sub">Start free. Upgrade when you're ready.</p>
+              <div class="pr-toggle-wrap">
+                <button class="pr-toggle-btn active" id="prMonthly" onclick="prSetBilling('monthly')">Monthly</button>
+                <button class="pr-toggle-btn" id="prYearly" onclick="prSetBilling('yearly')">
+                  Yearly <span class="pr-save-badge">Save 25%</span>
+                </button>
+              </div>
+            </div>
+            <div class="pr-cards" id="prCards"></div>
           </div>
         </div>
 

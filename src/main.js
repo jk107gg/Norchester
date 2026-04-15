@@ -134,13 +134,15 @@
       const isDm          = (el.id === 'nav-dm');
       const isSettings    = (el.id === 'nav-settings');
       const isSuggestions = (el.id === 'nav-suggestions');
-      const isPlaceholder = !isHome && !isAiChat && !isGlobalChat && !isDm && !isSettings && !isSuggestions;
+      const isPricing     = (el.id === 'nav-pricing');
+      const isPlaceholder = !isHome && !isAiChat && !isGlobalChat && !isDm && !isSettings && !isSuggestions && !isPricing;
       document.getElementById('homePanel').classList.toggle('active', isHome);
       document.getElementById('aiChatPanel').classList.toggle('active', isAiChat);
       document.getElementById('globalChatPanel').classList.toggle('active', isGlobalChat);
       document.getElementById('dmPanel').classList.toggle('active', isDm);
       document.getElementById('settingsPanel').classList.toggle('active', isSettings);
       document.getElementById('suggestionsPanel').classList.toggle('active', isSuggestions);
+      document.getElementById('pricingPanel').classList.toggle('active', isPricing);
       document.getElementById('placeholderPanel').classList.toggle('active', isPlaceholder);
       if (isPlaceholder) {
         const isGame = el.classList.contains('game-item');
@@ -155,6 +157,7 @@
       if (isDm)           initDmPanel();
       if (isSettings)     initSettingsPanel();
       if (isSuggestions)  initSuggestionsPanel();
+      if (isPricing)      initPricingPanel();
     }
 
     // ── Theme switching ───────────────────────────────────────────────
@@ -1621,6 +1624,148 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
       bug:    { bg:'rgba(220,38,38,0.15)',  text:'#f87171' },
       other:  { bg:'rgba(160,160,160,0.12)',text:'#9ca3af' },
     };
+
+    // ══════════════════════════════════════════════════════════════════
+    //  PRICING PANEL
+    // ══════════════════════════════════════════════════════════════════
+
+    const PR_PLANS = [
+      {
+        id: 'player', name: 'Player', sub: 'Free forever — no card needed',
+        monthly: 'Free', yearly: 'Free',
+        monthlyBill: '', yearlyBill: '',
+        popular: false,
+        features: [
+          'All 34+ core games',
+          'AI Chat — 10 messages/day',
+          'Public Global Chat',
+          'Standard "User" badge',
+          'Standard banner ads',
+        ],
+        cta: 'Start Playing',
+      },
+      {
+        id: 'pro', name: 'Orbit Pro', sub: 'The value pick for regulars',
+        monthly: '$4', yearly: '$3',
+        monthlyBill: 'Billed $48 per year', yearlyBill: 'Billed $36 per year',
+        popular: true,
+        features: [
+          'Unlimited Orbit AI chat',
+          'Completely ad-free',
+          'Custom username colours in chat',
+          '3–5 exclusive backgrounds (Nebula, Deep Void…)',
+          '"Pro" badge in sidebar & chat',
+          'New games 48 hrs early',
+        ],
+        cta: 'Upgrade to Pro',
+      },
+      {
+        id: 'elite', name: 'Orbit Elite', sub: 'Status tier — for power users',
+        monthly: '$9', yearly: '$7',
+        monthlyBill: 'Billed $108 per year', yearlyBill: 'Billed $84 per year',
+        popular: false,
+        features: [
+          'Everything in Orbit Pro',
+          'Vault: 5+ exclusive premium games',
+          'Smarter AI model (upgraded Groq)',
+          'Animated GIF profile pictures',
+          'Glowing name aura in user list',
+          'Private beta suggestions channel',
+          'Detailed stats — time played, heatmaps',
+        ],
+        cta: 'Go Elite',
+      },
+    ];
+
+    let prBilling = 'monthly';
+
+    function initPricingPanel() {
+      renderPrCards();
+      initPricingCanvas();
+    }
+
+    function prSetBilling(mode) {
+      prBilling = mode;
+      document.getElementById('prMonthly')?.classList.toggle('active', mode === 'monthly');
+      document.getElementById('prYearly')?.classList.toggle('active', mode === 'yearly');
+      renderPrCards();
+    }
+
+    function renderPrCards() {
+      const container = document.getElementById('prCards');
+      if (!container) return;
+      container.innerHTML = PR_PLANS.map((plan, i) => {
+        const price   = prBilling === 'yearly' ? plan.yearly  : plan.monthly;
+        const billing = prBilling === 'yearly' ? plan.yearlyBill : plan.monthlyBill;
+        const period  = price !== 'Free' ? '/mo' : '';
+        return `
+          <div class="pr-card${plan.popular ? ' pr-card-pop' : ''}" style="animation-delay:${0.08 + i * 0.09}s">
+            ${plan.popular ? '<div class="pr-popular-badge">Most Popular</div>' : ''}
+            <div class="pr-plan-name">${plan.name}</div>
+            <div class="pr-plan-sub">${plan.sub}</div>
+            <div class="pr-price">${price}<span class="pr-price-period">${period}</span></div>
+            <div class="pr-billing">${billing}</div>
+            <div class="pr-divider"></div>
+            <ul class="pr-features">
+              ${plan.features.map(f => `<li class="pr-feature"><span class="pr-check">✓</span>${f}</li>`).join('')}
+            </ul>
+            <button class="pr-cta-btn${plan.popular ? ' pr-cta-primary' : ''}">${plan.cta}</button>
+          </div>`;
+      }).join('');
+    }
+
+    function initPricingCanvas() {
+      const canvas = document.getElementById('pricingCanvas');
+      if (!canvas || canvas._prInit) return;
+      canvas._prInit = true;
+      const ctx = canvas.getContext('2d');
+      const dpr = () => Math.min(window.devicePixelRatio || 1, 2);
+
+      const setSize = () => {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const d = dpr();
+        const w = Math.max(1, Math.floor(rect.width));
+        const h = Math.max(1, Math.floor(rect.height));
+        canvas.width  = Math.floor(w * d);
+        canvas.height = Math.floor(h * d);
+        canvas.style.width  = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(d, 0, 0, d, 0, 0);
+      };
+      setSize();
+
+      let parts = [], raf = 0;
+
+      const make = () => {
+        const w = canvas.width / dpr(), h = canvas.height / dpr();
+        return { x: Math.random() * w, y: Math.random() * h, v: Math.random() * 0.25 + 0.05, o: Math.random() * 0.35 + 0.15 };
+      };
+
+      const init = () => {
+        parts = [];
+        const w = canvas.width / dpr(), h = canvas.height / dpr();
+        const count = Math.floor((w * h) / 12000);
+        for (let i = 0; i < count; i++) parts.push(make());
+      };
+
+      const draw = () => {
+        const w = canvas.width / dpr(), h = canvas.height / dpr();
+        ctx.clearRect(0, 0, w, h);
+        parts.forEach(p => {
+          p.y -= p.v;
+          if (p.y < 0) { p.x = Math.random() * w; p.y = h + Math.random() * 40; p.v = Math.random() * 0.25 + 0.05; p.o = Math.random() * 0.35 + 0.15; }
+          ctx.fillStyle = `rgba(250,250,250,${p.o})`;
+          ctx.fillRect(p.x, p.y, 0.7, 2.2);
+        });
+        raf = requestAnimationFrame(draw);
+      };
+
+      const ro = new ResizeObserver(() => { setSize(); init(); });
+      ro.observe(canvas.parentElement || document.body);
+
+      init();
+      raf = requestAnimationFrame(draw);
+    }
 
     function initSuggestionsPanel() {
       ensureFirebase();
