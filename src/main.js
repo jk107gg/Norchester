@@ -901,7 +901,10 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
       row.dataset.uid = msg.uid || '';
       row.dataset.ts  = String(ts);
 
+      // Entrance animation — remove class after it plays so re-renders are clean
+      row.classList.add('gc-msg-new');
       c.appendChild(row);
+      row.addEventListener('animationend', () => row.classList.remove('gc-msg-new'), { once: true });
 
       row.querySelectorAll('.gc-react-opener').forEach(btn =>
         btn.addEventListener('click', e => { e.stopPropagation(); showReactionPicker(btn, btn.dataset.id); })
