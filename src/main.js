@@ -796,9 +796,9 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
     // ══════════════════════════════════════════════════════════════════
 
     const FB_CONFIG = {
-      apiKey:      'AIzaSyAu_7Cl7y692z8WRVCM59gSRrHcfLUw3GA',
-      databaseURL: 'https://nu-chat-92feb-default-rtdb.firebaseio.com',
-      projectId:   'nu-chat-92feb',
+      apiKey:      import.meta.env.VITE_FIREBASE_API_KEY,
+      databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+      projectId:   import.meta.env.VITE_FIREBASE_PROJECT_ID,
     };
 
     let fbApp = null, fbDb = null;

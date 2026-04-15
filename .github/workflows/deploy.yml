@@ -45,3 +45,10 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        - name: Build
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          # ... (keep your firebase ones here)
+          VITE_GROQ_API_KEY: ${{ secrets.VITE_GROQ_API_KEY }}
+          VITE_GIPHY_API_KEY: ${{ secrets.VITE_GIPHY_API_KEY }}
+        run: npm run build
