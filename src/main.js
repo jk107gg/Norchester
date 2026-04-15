@@ -557,75 +557,7 @@
     };
 
     // ── AI Chat ──────────────────────────────────────────────────────
-    const AC_RESPONSES = {
-      greet: [
-        "Hey! I'm Orbit AI — I know every game on the platform. Ask me for recommendations, tips, or anything about Orbit.",
-      ],
-      recommend: [
-        "Right now **Tetrix** is our most-played — classic block-stacking at its best. If you want something different, **Pixel Dungeon** is a procedurally-generated horror dungeon with no two runs alike.",
-        "Try **Cookie Empire** if you want something you can leave running, or **Chess Classic** if you want a real mental workout. Both are in the top 5 most-played.",
-        "Depends on your mood. Competitive? **TypeSpeed** or **Pong Duel**. Relaxed? **Card Solitaire** or **Mahjong Tiles**. Intense? **Neon Snake** or **Tetrix**.",
-      ],
-      popular: [
-        "Top 5 on Orbit right now:\n1. **Tetrix** — 2.8k plays\n2. **2048** — 2.3k plays\n3. **Chess Classic** — 2.2k plays\n4. **Cookie Empire** — 2.1k plays\n5. **TypeSpeed** — 1.7k plays",
-      ],
-      random: [
-        "Random pick: **Asteroid Field** — pilot a lone fighter through relentless asteroid waves in zero gravity. High skill ceiling, very satisfying once it clicks.",
-        "Random pick: **Hex Merge** — place and merge numbered hexagons to reach higher tile values. Deceptively tricky.",
-        "Random pick: **Gravity Shift** — flip gravity on/off to navigate a speeding craft through tight corridors. Short sessions, very replayable.",
-      ],
-      chill: [
-        "Chill picks: **Cookie Empire** for idle relaxation, **Card Solitaire** for classic vibes, **Mahjong Tiles** for meditative matching, or **Idle Kingdom** if you like coming back to surprises.",
-        "**Wordcraft** and **Bubble Pop** are both low-pressure and surprisingly addictive. Good for a 10-minute break.",
-      ],
-      tips: [
-        "Which game? Tell me the name and I'll give you specific tips. Generally: in puzzle games, think 2–3 moves ahead. In arcade games, pattern recognition beats raw reactions every time.",
-      ],
-      tetrix: [
-        "Tetrix tips: (1) Keep the playing field flat — don't let towers build up on one side. (2) Always leave the rightmost column open for the long piece. (3) Clear 4 lines at once for bonus multipliers. Speed caps at level 12 — survive that and you've mastered it.",
-      ],
-      snake: [
-        "Neon Snake: hug the walls early to maximize maneuvering room. Never cut off your own escape route — the tail lingers one frame longer than you think. High scores come from spiraling inward deliberately.",
-      ],
-      chess: [
-        "Chess Classic: control the center early (e4/d4), develop knights before bishops, castle by move 10, and never bring your queen out before developing other pieces. The AI struggles most against solid pawn structures.",
-      ],
-      dungeon: [
-        "Pixel Dungeon: always check items before using them — unidentified potions can hurt you. Prioritize depth over clearing floors. A ring of regeneration early is a game-changer.",
-      ],
-      cookie: [
-        "Cookie Empire: buy the cheapest upgrade that doubles your per-second rate first. Grandmas are deceptively good early. Don't neglect the multiplier upgrades — they compound hard.",
-      ],
-      typing: [
-        "TypeSpeed: don't look at your hands, ever. Focus center-screen where words appear. Your accuracy matters more than raw speed — errors cost more time than they save. Target 80%+ accuracy before pushing WPM.",
-      ],
-      default: [
-        "I can help with game recs, tips for any of the 34 games, or show you what's popular. What are you looking for?",
-        "Interesting! I'm most useful for game recommendations and tips though. Ask me about any game by name — I know them all.",
-        "Happy to help! Try typing /recommend for a pick, /popular for charts, or /tips for strategy advice.",
-      ],
-    };
-
     let acChips = [];
-
-    function acRand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-    function acGetResponse(text) {
-      const t = text.toLowerCase();
-      if (/\b(hi|hello|hey|yo|sup)\b/.test(t))                             return acRand(AC_RESPONSES.greet);
-      if (/\/popular|most.?play|trending|top\s*\d/i.test(t))              return acRand(AC_RESPONSES.popular);
-      if (/\/random|surprise me|random/i.test(t))                          return acRand(AC_RESPONSES.random);
-      if (/\/recommend|\/tips|recommend|suggest|what.*play|what game/i.test(t)) return acRand(AC_RESPONSES.recommend);
-      if (/chill|relax|casual|easy|idle/i.test(t))                         return acRand(AC_RESPONSES.chill);
-      if (/tetrix|tetris/i.test(t))                                        return acRand(AC_RESPONSES.tetrix);
-      if (/snake/i.test(t))                                                return acRand(AC_RESPONSES.snake);
-      if (/chess/i.test(t))                                                return acRand(AC_RESPONSES.chess);
-      if (/dungeon|pixel/i.test(t))                                        return acRand(AC_RESPONSES.dungeon);
-      if (/cookie|empire|idle/i.test(t))                                   return acRand(AC_RESPONSES.cookie);
-      if (/type.?speed|typing|wpm/i.test(t))                               return acRand(AC_RESPONSES.typing);
-      if (/tip|strategy|advice|how.*score|how.*win/i.test(t))              return acRand(AC_RESPONSES.tips);
-      return acRand(AC_RESPONSES.default);
-    }
 
     function acAddMsg(role, text) {
       const msgs  = document.getElementById('acMessages');
@@ -676,28 +608,26 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
       acChips = []; document.getElementById('acChipsRow').innerHTML = '';
       acConvHistory.push({ role: 'user', content: fullText });
       if (acConvHistory.length > 14) acConvHistory = acConvHistory.slice(-14);
-      // Update model label
       const lbl = document.querySelector('.ac-model-label');
-      if (lbl) lbl.textContent = groqKey ? 'Orbit AI · llama-3.3' : 'Orbit AI · local';
+      if (lbl) lbl.textContent = 'Orbit AI · llama-3.3';
       acShowTyping();
-      if (!groqKey) {
-        setTimeout(() => { acHideTyping(); acAddMsg('ai', acGetResponse(fullText)); }, 550 + Math.random() * 400);
-        return;
-      }
       try {
         const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${groqKey}`, 'Content-Type': 'application/json' },
+          headers: {
+            'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             model: 'llama-3.3-70b-versatile',
-            messages: [{ role:'system', content: GROQ_SYSTEM }, ...acConvHistory],
+            messages: [{ role: 'system', content: GROQ_SYSTEM }, ...acConvHistory],
             max_tokens: 280, temperature: 0.82,
-          })
+          }),
         });
         const data = await resp.json();
         acHideTyping();
         const reply = data.choices?.[0]?.message?.content?.trim() || "hmm something went weird, try again?";
-        acConvHistory.push({ role:'assistant', content: reply });
+        acConvHistory.push({ role: 'assistant', content: reply });
         if (acConvHistory.length > 14) acConvHistory = acConvHistory.slice(-14);
         acAddMsg('ai', reply);
       } catch(e) {
