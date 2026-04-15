@@ -1078,9 +1078,16 @@
       flex:1; overflow-y:auto; padding:0.9rem 1rem 0.6rem;
       display:flex; flex-direction:column; gap:0; scroll-behavior:smooth;
     }
-    .gc-msgs::-webkit-scrollbar { width:3px; }
-    .gc-msgs::-webkit-scrollbar-track { background:transparent; }
-    .gc-msgs::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:2px; }
+    .gc-msgs { scrollbar-width: thin; scrollbar-color: rgba(123,31,162,0.45) transparent; }
+    .gc-msgs::-webkit-scrollbar { width: 3px; }
+    .gc-msgs::-webkit-scrollbar-track { background: rgba(0,0,0,0.15); border-radius: 2px; }
+    .gc-msgs::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(123,31,162,0.65), rgba(100,220,255,0.3));
+      border-radius: 2px;
+    }
+    .gc-msgs::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, rgba(123,31,162,0.9), rgba(100,220,255,0.5));
+    }
     .gc-empty-msg {
       text-align:center; padding:3rem 1rem; font-size:0.72rem;
       color:rgba(255,255,255,0.12); font-family:var(--orbit-ui);
@@ -1121,12 +1128,16 @@
     .gc-msg-username {
       font-size:0.73rem; font-weight:800;
       color:var(--gblue);
-      text-shadow:0 0 10px rgba(var(--gblue-rgb),0.5);
+      text-shadow:
+        0 0 8px  rgba(var(--gblue-rgb), 0.7),
+        0 0 20px rgba(var(--gblue-rgb), 0.3);
       font-family:var(--orbit-ui); letter-spacing:0.06em; text-transform:uppercase;
     }
     .gc-msg-username.self {
       color:#a78bfa;
-      text-shadow:0 0 10px rgba(167,139,250,0.5);
+      text-shadow:
+        0 0 8px  rgba(167,139,250,0.75),
+        0 0 20px rgba(167,139,250,0.35);
     }
     .gc-msg-time {
       font-size:0.5rem; color:rgba(255,255,255,0.15);
@@ -1142,38 +1153,63 @@
       background: rgba(15, 15, 20, 0.4);
       /* Holographic cyan glow border */
       border: 1px solid rgba(100, 220, 255, 0.1);
-      border-left: 2px solid rgba(100, 220, 255, 0.45); /* accent line */
+      border-left: 2px solid rgba(100, 220, 255, 0.45);
       border-radius: 12px;
       padding: 0.55rem 0.72rem 0.55rem 0.78rem;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      /* Neon outer glow + depth shadow */
       box-shadow:
+        0 0 15px rgba(123, 31, 162, 0.2),
         0 0 0 1px rgba(100, 220, 255, 0.04) inset,
         0 2px 14px rgba(0, 0, 0, 0.38);
-      transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
+      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
       width: fit-content; max-width: 100%;
+      /* Needed for glass-reflection pseudo-element */
+      position: relative; overflow: hidden;
     }
+    /* Glass reflection — static diagonal light streak */
+    .gc-bubble::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.055) 0%,
+        rgba(255, 255, 255, 0.02)  38%,
+        transparent                55%
+      );
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    /* Hover — HUD reacts to cursor: more opaque + brighter border */
     .gc-msg-row:hover .gc-bubble {
-      background: rgba(15, 15, 20, 0.55);
-      border-color: rgba(100, 220, 255, 0.18);
-      border-left-color: rgba(100, 220, 255, 0.65);
+      background: rgba(15, 15, 20, 0.6);
+      border-color: rgba(100, 220, 255, 0.22);
+      border-left-color: rgba(100, 220, 255, 0.7);
       box-shadow:
-        0 0 0 1px rgba(100, 220, 255, 0.07) inset,
-        0 4px 20px rgba(0, 0, 0, 0.45);
+        0 0 20px rgba(123, 31, 162, 0.32),
+        0 0 0 1px rgba(100, 220, 255, 0.1) inset,
+        0 4px 20px rgba(0, 0, 0, 0.48);
     }
-    /* Self messages — purple accent line */
+    /* Self messages — purple accent line + glow */
     .gc-msg-row.self .gc-bubble {
-      border-color: rgba(167, 139, 250, 0.1);
+      border-color: rgba(167, 139, 250, 0.12);
       border-left: 2px solid rgba(167, 139, 250, 0.55);
       background: rgba(15, 15, 22, 0.42);
       box-shadow:
+        0 0 15px rgba(123, 31, 162, 0.22),
         0 0 0 1px rgba(167, 139, 250, 0.05) inset,
         0 2px 14px rgba(0, 0, 0, 0.38);
     }
     .gc-msg-row.self:hover .gc-bubble {
-      background: rgba(15, 15, 22, 0.58);
-      border-color: rgba(167, 139, 250, 0.18);
-      border-left-color: rgba(167, 139, 250, 0.72);
+      background: rgba(15, 15, 22, 0.6);
+      border-color: rgba(167, 139, 250, 0.22);
+      border-left-color: rgba(167, 139, 250, 0.78);
+      box-shadow:
+        0 0 20px rgba(123, 31, 162, 0.35),
+        0 0 0 1px rgba(167, 139, 250, 0.1) inset,
+        0 4px 20px rgba(0, 0, 0, 0.48);
     }
     /* Entrance animation — applied only to newly appended rows */
     .gc-msg-row.gc-msg-new .gc-bubble {
@@ -1253,14 +1289,31 @@
     }
     .gc-act-btn { background:none; border:none; cursor:pointer; color:rgba(255,255,255,0.38); font-size:0.68rem; padding:3px 7px; border-radius:5px; transition:all 0.11s; }
     .gc-act-btn:hover { background:rgba(var(--gblue-rgb),0.13); color:rgba(255,255,255,0.92); }
-    /* Typing bar */
+    /* Typing bar — HUD mini-bubble */
     .gc-typing-bar {
-      flex-shrink:0; min-height:20px; padding:0 1.1rem 0.1rem;
-      font-size:0.64rem; color:rgba(255,255,255,0.28); font-family:var(--orbit-ui);
-      display:flex; align-items:center; gap:0.35rem;
+      flex-shrink:0; min-height:26px; padding:0 1.1rem 0.4rem;
+      font-size:0.58rem; color:rgba(255,255,255,0.3); font-family:var(--orbit-ui);
+      display:flex; align-items:center; gap:0.4rem;
+      letter-spacing:0.03em;
     }
-    .gc-typing-dots-wrap { display:flex; gap:2px; align-items:center; }
-    .gc-typing-dot { width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,0.35); animation:acDotBounce 1.2s ease-in-out infinite; }
+    .gc-typing-dots-wrap {
+      display:inline-flex; gap:3px; align-items:center;
+      background:rgba(15,15,20,0.55);
+      border:1px solid rgba(100,220,255,0.14);
+      border-left:2px solid rgba(100,220,255,0.42);
+      border-radius:10px;
+      padding:0.22rem 0.55rem;
+      box-shadow:0 0 10px rgba(123,31,162,0.18);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      animation:gcMsgEnter 0.22s cubic-bezier(0.23,1,0.32,1) both;
+    }
+    .gc-typing-dot {
+      width:4px; height:4px; border-radius:50%;
+      background:rgba(100,220,255,0.65);
+      box-shadow:0 0 4px rgba(100,220,255,0.5);
+      animation:acDotBounce 1.2s ease-in-out infinite;
+    }
     .gc-typing-dot:nth-child(2) { animation-delay:0.17s; }
     .gc-typing-dot:nth-child(3) { animation-delay:0.34s; }
     /* ── Input area — floating glass pill ─────────────────────────────── */
