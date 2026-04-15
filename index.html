@@ -612,10 +612,11 @@
         <button class="game-close-btn" onclick="closeOverlay()">ESC — Close</button>
       </div>
       <div class="game-content-area">
+        <!-- Starfield shared across all panels -->
+        <canvas id="starfieldCanvas"></canvas>
 
         <!-- ── Home Panel ── -->
         <div class="g-panel active" id="homePanel">
-          <canvas id="starfieldCanvas"></canvas>
           <div class="home-scroll" id="homeScroll">
 
             <h1 class="home-heading">Orbit</h1>

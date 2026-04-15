@@ -993,7 +993,8 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
         <div class="gc-msg-spacer"></div>
         <div class="gc-msg-body">
           <div class="gc-bubble">${replyHtml}${body}${reactHtml}</div>
-        </div>${actions}</div>`;
+        </div>
+        ${actions}</div>`;
 
       return `<div class="gc-msg-row${isSelf?' self':''}" data-id="${msg.id}">
         <div class="gc-msg-avatar" title="${uname}">${initials}</div>
@@ -1003,7 +1004,8 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
             <span class="gc-msg-time">${time}</span>
           </div>
           <div class="gc-bubble">${replyHtml}${body}${reactHtml}</div>
-        </div>${actions}</div>`;
+        </div>
+        ${actions}</div>`;
     }
 
     function gcSend() {
