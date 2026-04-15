@@ -815,14 +815,50 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
       if (gcInitialized || !fbDb) return;
       gcInitialized = true;
 
-      // Messages
-      fbDb.ref('chat/messages').limitToLast(80).on('value', snap => {
+      const msgsRef = fbDb.ref('chat/messages');
+
+      // ── Initial bulk load (once), then switch to incremental listeners
+      let initialLoadDone = false;
+      msgsRef.limitToLast(80).once('value', snap => {
         const msgs = [];
-        snap.forEach(c => msgs.push({ id: c.key, ...c.val() }));
+        snap.forEach(child => msgs.push({ id: child.key, ...child.val() }));
         renderGcMessages(msgs);
+        initialLoadDone = true;
+
+        // ── New messages: append in real-time after initial load
+        const lastKey = msgs.length ? msgs[msgs.length - 1].id : null;
+        const newMsgsQuery = lastKey
+          ? msgsRef.orderByKey().startAfter(lastKey)
+          : msgsRef.limitToLast(1);
+
+        newMsgsQuery.on('child_added', snap => {
+          if (!initialLoadDone) return;
+          const msg = { id: snap.key, ...snap.val() };
+          appendGcMessage(msg);
+        });
+
+        // ── Reaction / edit updates: update existing message row in-place
+        msgsRef.on('child_changed', snap => {
+          if (!initialLoadDone) return;
+          const msg = { id: snap.key, ...snap.val() };
+          const c = document.getElementById('gcMsgs');
+          if (!c) return;
+          const existing = c.querySelector(`.gc-msg-row[data-id="${msg.id}"]`);
+          if (!existing) return;
+          const grouped = existing.classList.contains('grouped');
+          const tmp = document.createElement('div');
+          tmp.innerHTML = buildGcMsgHtml(msg, grouped);
+          const newRow = tmp.firstElementChild;
+          if (newRow) {
+            existing.replaceWith(newRow);
+            newRow.querySelectorAll('.gc-react-opener').forEach(btn =>
+              btn.addEventListener('click', e => { e.stopPropagation(); showReactionPicker(btn, btn.dataset.id); })
+            );
+          }
+        });
       });
 
-      // Typing
+      // ── Typing
       fbDb.ref('chat/typing').on('value', snap => {
         const typers = [];
         snap.forEach(c => {
@@ -836,6 +872,42 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
         const label = typers.slice(0,3).join(', ') + (typers.length===1?' is':' are') + ' typing…';
         bar.innerHTML = `<div class="gc-typing-dots-wrap"><div class="gc-typing-dot"></div><div class="gc-typing-dot"></div><div class="gc-typing-dot"></div></div><span>${escH(label)}</span>`;
       });
+    }
+
+    // Append a single new message to the chat container
+    function appendGcMessage(msg) {
+      const c = document.getElementById('gcMsgs');
+      if (!c) return;
+
+      // Remove "no messages" placeholder if present
+      const empty = c.querySelector('.gc-empty-msg');
+      if (empty) empty.remove();
+
+      // Determine grouping from last rendered row
+      const lastRow = c.querySelector('.gc-msg-row:last-child');
+      const prevUid  = lastRow ? lastRow.dataset.uid  || null : null;
+      const prevTime = lastRow ? parseInt(lastRow.dataset.ts || '0', 10) : 0;
+      const ts       = msg.timestamp || 0;
+      const grouped  = msg.uid === prevUid && ts - prevTime < 300000 && !msg.replyTo;
+
+      const atBottom = c.scrollTop + c.clientHeight >= c.scrollHeight - 100;
+
+      const tmp = document.createElement('div');
+      tmp.innerHTML = buildGcMsgHtml(msg, grouped);
+      const row = tmp.firstElementChild;
+      if (!row) return;
+
+      // Store uid + timestamp on the row for future grouping checks
+      row.dataset.uid = msg.uid || '';
+      row.dataset.ts  = String(ts);
+
+      c.appendChild(row);
+
+      row.querySelectorAll('.gc-react-opener').forEach(btn =>
+        btn.addEventListener('click', e => { e.stopPropagation(); showReactionPicker(btn, btn.dataset.id); })
+      );
+
+      if (atBottom) requestAnimationFrame(() => { c.scrollTop = c.scrollHeight; });
     }
 
     function renderOnlinePills() {
@@ -855,20 +927,33 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
     function renderGcMessages(msgs) {
       const c = document.getElementById('gcMsgs');
       if (!c) return;
-      const atBottom = c.scrollTop + c.clientHeight >= c.scrollHeight - 100;
       if (!msgs.length) { c.innerHTML = '<div class="gc-empty-msg">No messages yet — say something!</div>'; return; }
-      let html = '', prevUid = null, prevTime = 0;
+
+      const frag = document.createDocumentFragment();
+      let prevUid = null, prevTime = 0;
       msgs.forEach(msg => {
         const ts = msg.timestamp || 0;
         const grouped = msg.uid === prevUid && ts - prevTime < 300000 && !msg.replyTo;
-        html += buildGcMsgHtml(msg, grouped);
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildGcMsgHtml(msg, grouped);
+        const row = tmp.firstElementChild;
+        if (!row) return;
+        // Store for future grouping / in-place updates
+        row.dataset.uid = msg.uid || '';
+        row.dataset.ts  = String(ts);
+        frag.appendChild(row);
         prevUid = msg.uid; prevTime = ts;
       });
-      c.innerHTML = html;
-      if (atBottom) c.scrollTop = c.scrollHeight;
+
+      c.innerHTML = '';
+      c.appendChild(frag);
+
       c.querySelectorAll('.gc-react-opener').forEach(btn =>
         btn.addEventListener('click', e => { e.stopPropagation(); showReactionPicker(btn, btn.dataset.id); })
       );
+
+      // Scroll to bottom after DOM paints
+      requestAnimationFrame(() => { c.scrollTop = c.scrollHeight; });
     }
 
     function buildGcMsgHtml(msg, grouped) {
