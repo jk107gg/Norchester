@@ -927,8 +927,8 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
       if (gcPendingGif) { msg.gifUrl = gcPendingGif; gcPendingGif = null; document.getElementById('gcGifChipWrap').innerHTML = ''; }
       fbDb.ref('chat/messages').push(msg);
       fbDb.ref('chat/typing/'+fbUid).remove();
-      ta.value = ''; ta.style.height = '';
-      gcClearReply(); gcClearMention(); gcUpdateSendBtn();
+      ta.value = ''; ta.style.height = '20px';
+      gcClearReply(); gcClearMention(); gcUpdateSendBtn(); gcUpdateCharCount();
       gcIsTyping = false; clearTimeout(gcTypingTimer);
     }
 
@@ -938,9 +938,11 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
     }
 
     function gcOnInput(ta) {
-      ta.style.height = 'auto';
-      ta.style.height = Math.min(ta.scrollHeight, 110) + 'px';
+      const GC_MIN_H = 20, GC_MAX_H = 120;
+      ta.style.height = GC_MIN_H + 'px';
+      ta.style.height = Math.min(ta.scrollHeight, GC_MAX_H) + 'px';
       gcUpdateSendBtn();
+      gcUpdateCharCount();
       if (!gcIsTyping && fbDb) {
         gcIsTyping = true;
         fbDb.ref('chat/typing/'+fbUid).set({ active:true, username:fbUsername, ts:Date.now() });
@@ -968,6 +970,22 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
       const btn = document.getElementById('gcSendBtn');
       if (btn) btn.classList.toggle('ready', !!(ta?.value.trim() || gcPendingGif));
     }
+
+    function gcUpdateCharCount() {
+      const ta  = document.getElementById('gcTextarea');
+      const el  = document.getElementById('gcCharCount');
+      if (!ta || !el) return;
+      const len = ta.value.length;
+      if (len < 400) { el.textContent = ''; el.className = 'gc-char-count'; return; }
+      el.textContent = `${len}/500`;
+      el.className   = 'gc-char-count' + (len >= 480 ? ' danger' : ' warn');
+    }
+
+    // Re-compute textarea height if the panel resizes (e.g. window resize or sidebar toggle)
+    window.addEventListener('resize', () => {
+      const ta = document.getElementById('gcTextarea');
+      if (ta && ta.value) gcOnInput(ta);
+    });
 
     function gcSetReply(msgId, username, text) {
       gcReplyTo = { msgId, username, text };

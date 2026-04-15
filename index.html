@@ -763,19 +763,25 @@
               <div class="gc-mention-dropdown" id="gcMentionDropdown"></div>
               <div class="gc-input-box">
                 <div id="gcGifChipWrap"></div>
-                <div class="gc-input-row">
-                  <div class="gc-input-actions">
+                <textarea class="gc-textarea" id="gcTextarea"
+                  placeholder="Message everyone…" rows="1"
+                  onkeydown="gcKeydown(event)"
+                  oninput="gcOnInput(this)"
+                  maxlength="500"></textarea>
+                <div class="gc-action-row">
+                  <div class="gc-action-left">
                     <button class="gc-toolbar-btn" onclick="gcToggleGifPicker()" title="GIF">GIF</button>
-                    <button class="gc-toolbar-btn" onclick="gcTriggerImageUpload()" title="Image">⊕</button>
+                    <button class="gc-toolbar-btn" onclick="gcTriggerImageUpload()" title="Upload image">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5v7M6 1.5L3 4.5M6 1.5L9 4.5M1.5 10.5h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                     <input type="file" id="gcImageInput" accept="image/*" style="display:none" onchange="gcHandleImage(this)"/>
                   </div>
-                  <textarea class="gc-textarea" id="gcTextarea"
-                    placeholder="Message everyone…" rows="1"
-                    onkeydown="gcKeydown(event)"
-                    oninput="gcOnInput(this)"></textarea>
-                  <button class="gc-send-btn" id="gcSendBtn" onclick="gcSend()">
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M5.5 1L2 4.5M5.5 1L9 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
+                  <div class="gc-action-right">
+                    <span class="gc-char-count" id="gcCharCount"></span>
+                    <button class="gc-send-btn" id="gcSendBtn" onclick="gcSend()">
+                      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M5.5 1L2 4.5M5.5 1L9 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

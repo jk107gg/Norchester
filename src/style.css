@@ -1224,28 +1224,37 @@
     /* Chat input box */
     .gc-input-box {
       background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09);
-      border-radius:12px; padding:0.5rem 0.65rem;
+      border-radius:12px; padding:0.55rem 0.7rem 0.45rem;
       transition:border-color 0.17s, box-shadow 0.17s; position:relative;
     }
     .gc-input-box:focus-within { border-color:rgba(var(--gblue-rgb),0.3); box-shadow:0 0 0 3px rgba(var(--gblue-rgb),0.06); }
-    .gc-input-row { display:flex; align-items:flex-end; gap:0.38rem; }
-    .gc-input-actions { display:flex; gap:2px; align-items:center; flex-shrink:0; margin-bottom:1px; }
+    .gc-textarea {
+      width:100%; display:block; background:transparent; border:none; outline:none; resize:none;
+      color:rgba(255,255,255,0.84); font-family:var(--orbit-ui); font-size:0.8rem;
+      line-height:1.5; min-height:20px; max-height:120px; overflow-y:auto;
+      caret-color:var(--gblue); padding:0; margin-bottom:0.5rem;
+    }
+    .gc-textarea::placeholder { color:rgba(255,255,255,0.17); }
+    .gc-textarea::-webkit-scrollbar { width:2px; }
+    .gc-textarea::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:2px; }
+    .gc-action-row { display:flex; align-items:center; justify-content:space-between; }
+    .gc-action-left  { display:flex; align-items:center; gap:2px; }
+    .gc-action-right { display:flex; align-items:center; gap:0.4rem; }
     .gc-toolbar-btn {
       background:none; border:none; cursor:pointer; font-size:0.62rem; font-weight:700;
       color:rgba(255,255,255,0.22); padding:3px 6px; border-radius:5px;
       transition:all 0.13s; font-family:var(--orbit-ui); letter-spacing:0.03em;
+      display:flex; align-items:center; gap:3px;
     }
     .gc-toolbar-btn:hover { background:rgba(var(--gblue-rgb),0.1); color:rgba(255,255,255,0.72); }
-    .gc-textarea {
-      flex:1; background:transparent; border:none; outline:none; resize:none;
-      color:rgba(255,255,255,0.84); font-family:var(--orbit-ui); font-size:0.8rem;
-      line-height:1.5; min-height:20px; max-height:110px; overflow-y:auto;
-      caret-color:var(--gblue);
+    .gc-char-count {
+      font-size:0.58rem; font-family:var(--orbit-ui); color:rgba(255,255,255,0.2);
+      transition:color 0.17s; letter-spacing:0.02em; min-width:2ch; text-align:right;
     }
-    .gc-textarea::placeholder { color:rgba(255,255,255,0.17); }
-    .gc-textarea::-webkit-scrollbar { width:2px; }
+    .gc-char-count.warn   { color:rgba(251,146,60,0.75); }
+    .gc-char-count.danger { color:rgba(239,68,68,0.9);   }
     .gc-send-btn {
-      width:28px; height:28px; border-radius:50%; flex-shrink:0;
+      width:26px; height:26px; border-radius:50%; flex-shrink:0;
       background:rgba(var(--gblue-rgb),0.1); border:1px solid rgba(var(--gblue-rgb),0.17);
       color:rgba(var(--gblue-rgb),0.4); cursor:pointer;
       display:flex; align-items:center; justify-content:center;
