@@ -172,8 +172,13 @@
         // Non-game placeholder (changelog, etc.) — reset iframe, show "coming soon"
         const iframe    = document.getElementById('gameIframe');
         const phContent = document.getElementById('phContent');
-        if (iframe)    { iframe.src = 'about:blank'; iframe.style.display = 'none'; }
+        const phError   = document.getElementById('phIframeError');
+        if (iframe) {
+          if (iframe._blockTimer) { clearTimeout(iframe._blockTimer); iframe._blockTimer = null; }
+          iframe.src = 'about:blank'; iframe.style.display = 'none';
+        }
         if (phContent) phContent.style.display = '';
+        if (phError)   phError.style.display = 'none';
         document.getElementById('phIcon').textContent  = '◈';
         document.getElementById('phTitle').textContent = label + ' — Coming Soon';
         document.getElementById('phSub').textContent   = 'This feature will be available in a future update.';
@@ -598,26 +603,26 @@
         if (phBlockedTitle) phBlockedTitle.textContent = g.name + ' — blocked by host';
 
         if (iframe) {
-          iframe.src = 'about:blank';           // reset first so load event fires reliably
-          iframe.style.display = 'block';
+          // Clear any previous block-detection timer
+          if (iframe._blockTimer) { clearTimeout(iframe._blockTimer); iframe._blockTimer = null; }
 
-          // Detect iframe block: if load fires but contentDocument is inaccessible/empty
-          // due to X-Frame-Options, show fallback after a short grace period
-          const _loadHandler = function() {
-            iframe.removeEventListener('load', _loadHandler);
-            try {
-              // Cross-origin: accessing contentDocument throws or returns null
-              const doc = iframe.contentDocument || iframe.contentWindow?.document;
-              if (!doc || doc.URL === 'about:blank') throw new Error('blocked');
-            } catch(e) {
-              // Blocked — show fallback
+          iframe.style.display = 'block';
+          iframe.src = url;
+
+          // X-Frame-Options block: browser either fires no load event, or navigates
+          // iframe to about:blank silently. We detect by checking src after a grace period.
+          // NOTE: do NOT read contentDocument — always throws SecurityError cross-origin.
+          iframe._blockTimer = setTimeout(() => {
+            iframe._blockTimer = null;
+            // If iframe is still showing (not manually hidden) but src reverted to blank,
+            // the host blocked embedding.
+            const currentSrc = iframe.src; // reflects resolved URL, blank if blocked
+            if (iframe.style.display !== 'none' &&
+                (currentSrc === 'about:blank' || currentSrc === '' || currentSrc === window.location.href)) {
               iframe.style.display = 'none';
-              if (phError) { phError.style.display = 'flex'; }
+              if (phError) phError.style.display = 'flex';
             }
-          };
-          iframe.addEventListener('load', _loadHandler);
-          // Use rAF so blank reset settles before loading new URL
-          requestAnimationFrame(() => { iframe.src = url; });
+          }, 4000); // 4s grace — enough for slow loads, fast enough to show fallback
         }
       } else {
         if (iframe)         { iframe.src = 'about:blank'; iframe.style.display = 'none'; }
