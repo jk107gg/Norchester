@@ -291,6 +291,7 @@
       { id:32, name:'Henry Stickman 4',      cat:'Fun',     icon:'▶',  plays:1432, url:'https://www.poki.com/en/g/fleeing-the-complex',                                       desc:'The most elaborate prison break yet — choose your escape route.' },
       { id:33, name:'Henry Stickman 5',      cat:'Fun',     icon:'▶',  plays:1234, url:'https://henrystickmin.net/en/infiltrating-the-airship',                               desc:'Infiltrate an airship full of traps, guards, and terrible decisions.' },
       { id:34, name:'Rocket Soccer Derby',   cat:'Sports',  icon:'◎',  plays:2109, url:'https://rocketsoccerderby.gitlab.io/file/',                                           desc:'Rocket-powered cars smashing a ball into a goal. Absolute chaos.' },
+      { id:35, name:'A Small World Cup',     cat:'Sports',  icon:'⚽', plays:1876, url:'/stuff/selfhosted/asmallworldcup',                                                     desc:'Flick your way to World Cup glory in this tiny, addictive football game.' },
     ];
 
     const CAT_COLORS = {
