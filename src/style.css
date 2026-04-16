@@ -2083,12 +2083,12 @@
     .gc-orbit-line:hover .gc-orbit-ts  { color: rgba(100,220,255,0.6); }
 
     /* ── Starfield canvas ── */
-    #starfieldCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+    #starfieldCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; display: block; }
 
     /* ── Home scroll ── */
     .home-scroll {
       flex: 1; overflow-y: auto; position: relative; z-index: 1;
-      padding: 1.2rem 2.5rem 4rem;
+      padding: 0 2.5rem 4rem;
       display: flex; flex-direction: column; align-items: center;
     }
     .home-scroll::-webkit-scrollbar { width: 3px; }
@@ -2125,7 +2125,7 @@
       font-weight: 800;
       color: var(--gblue);
       line-height: 0.9;
-      margin-top: 15vh;
+      margin-top: 8vh;
       margin-bottom: 0.4rem;
       letter-spacing: -0.05em;
       animation: orbitGlow 3.5s ease-in-out infinite;

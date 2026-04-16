@@ -156,6 +156,7 @@
         document.getElementById('phTitle').textContent = label + ' — Coming Soon';
         document.getElementById('phSub').textContent   = 'This feature will be available in a future update.';
       }
+      if (isHome)         { renderRecent(); renderFeatured(); renderGrid(); }
       if (isAiChat)       initAcGlow();
       if (isGlobalChat)   initGlobalChat();
       if (isDm)           initDmPanel();
@@ -426,8 +427,9 @@
       const grid = document.getElementById('homeGrid');
       if (!grid) return;
 
-      // ── Build all cards once ──────────────────────────────────────
-      if (!_gridInitialized) {
+      // ── Build all cards once (or if grid was cleared) ─────────────
+      const cardsExist = grid.querySelectorAll('.game-card[data-id]').length > 0;
+      if (!_gridInitialized || !cardsExist) {
         _gridInitialized = true;
         grid.innerHTML = GAMES.map(g => {
           const cc   = CAT_COLORS[g.cat]    || { bg:'rgba(255,255,255,0.06)', text:'#888' };
