@@ -818,6 +818,7 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
       ensureFirebase();
       if (gcInitialized || !fbDb) return;
       gcInitialized = true;
+      initOrbitFeed();
 
       const msgsRef = fbDb.ref('chat/messages');
 
@@ -981,6 +982,97 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
           <span class="gc-hud-feed-time">${label}</span>
         </div>`;
       }).join('');
+    }
+
+    // ── Orbit Feed — terminal-style system log ─────────────────────────
+    const ORBIT_FEED_SEED = [
+      { type: 'sys',  msg: 'ORBIT v2.0 — systems nominal' },
+      { type: 'stat', msg: '34 users online' },
+      { type: 'evt',  msg: 'Vivex updated the Changelog' },
+      { type: 'score',msg: 'New high score in Tetrix' },
+      { type: 'evt',  msg: 'FlamingoKing joined the server' },
+      { type: 'stat', msg: 'Cookie Empire played 1,240×' },
+      { type: 'evt',  msg: 'New suggestion submitted' },
+    ];
+
+    const gcOrbitLog = [];    // {type, msg, ts}  max 30
+
+    function gcOrbitPush(type, msg) {
+      gcOrbitLog.unshift({ type, msg, ts: Date.now() });
+      if (gcOrbitLog.length > 30) gcOrbitLog.pop();
+      _renderOrbitFeed();
+    }
+
+    function _renderOrbitFeed() {
+      const el = document.getElementById('gcOrbitFeed');
+      if (!el) return;
+      el.innerHTML = gcOrbitLog.map(e => {
+        const d = new Date(e.ts);
+        const ts = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0') + ':' + d.getSeconds().toString().padStart(2,'0');
+        return `<div class="gc-orbit-line gc-orbit-line--${e.type}">
+          <span class="gc-orbit-ts">${ts}</span>
+          <span class="gc-orbit-msg">${escH(e.msg)}</span>
+        </div>`;
+      }).join('');
+      el.scrollTop = 0;
+    }
+
+    function initOrbitFeed() {
+      if (gcOrbitLog.length) return;  // already seeded
+      // Seed in reverse so newest ends up at top
+      [...ORBIT_FEED_SEED].reverse().forEach((e, i) => {
+        gcOrbitLog.push({ type: e.type, msg: e.msg, ts: Date.now() - (ORBIT_FEED_SEED.length - i) * 47000 });
+      });
+      _renderOrbitFeed();
+      // Drip new mock events while chat is open
+      const MOCK = [
+        { type:'stat',  msg:'Online users: {n}' },
+        { type:'score', msg:'New high score in Neon Snake' },
+        { type:'evt',   msg:'New game suggestion submitted' },
+        { type:'stat',  msg:'2048 played {n}× today' },
+        { type:'evt',   msg:'Atl Alex joined Global Chat' },
+        { type:'score', msg:'TypeSpeed record broken' },
+      ];
+      let mi = 0;
+      setInterval(() => {
+        const entry = MOCK[mi % MOCK.length];
+        const msg = entry.msg.replace('{n}', Math.floor(28 + Math.random() * 12));
+        gcOrbitPush(entry.type, msg);
+        mi++;
+      }, 18000);
+    }
+
+    // ── Credits card: image fallback + moving shine ────────────────────
+    const CR_COLORS = {
+      owner:  '#fbbf24',
+      admin:  '#67e8f9',
+      helper: '#6ee7b7',
+    };
+
+    function crImgFallback(img, initials, role) {
+      const color = CR_COLORS[role] || '#a78bfa';
+      const wrap = img.parentElement;
+      img.remove();
+      const fb = document.createElement('div');
+      fb.className = 'cr-avatar cr-avatar-fallback';
+      fb.textContent = initials;
+      fb.style.setProperty('--cr-role-color', color);
+      wrap.insertBefore(fb, wrap.firstChild);
+    }
+
+    function crShine(e, card) {
+      const r = card.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width)  * 100;
+      const y = ((e.clientY - r.top)  / r.height) * 100;
+      card.style.setProperty('--cr-mx', x + '%');
+      card.style.setProperty('--cr-my', y + '%');
+      const shine = card.querySelector('.cr-shine-layer');
+      if (shine) shine.style.opacity = '1';
+    }
+
+    function crShineReset(card) {
+      const shine = card.querySelector('.cr-shine-layer');
+      if (shine) shine.style.opacity = '0';
     }
 
     function renderGcMessages(msgs) {
@@ -1995,6 +2087,10 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
     window.closeOverlay           = closeOverlay;
     window.selectSidebarItem      = selectSidebarItem;
     window.gcLogActivity          = gcLogActivity;
+    window.gcOrbitPush            = gcOrbitPush;
+    window.crImgFallback          = crImgFallback;
+    window.crShine                = crShine;
+    window.crShineReset           = crShineReset;
     window.filterGames            = filterGames;
     window.setTheme               = setTheme;
     window.toggleProfileDropdown  = toggleProfileDropdown;

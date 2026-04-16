@@ -1098,6 +1098,10 @@
       background: #a78bfa;
       box-shadow: 0 0 6px rgba(167, 139, 250, 0.8);
     }
+    .gc-hud-dot.cyan {
+      background: #67e8f9;
+      box-shadow: 0 0 6px rgba(103, 232, 249, 0.85);
+    }
     @keyframes gcHudPulse {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0.4; }
@@ -2025,6 +2029,74 @@
       .cr-scroll { padding: 1.5rem 1rem 2rem; }
       .cr-grid { grid-template-columns: 1fr; max-width: 280px; }
     }
+
+    /* ── Credits: moving shine layer ────────────────────────────────── */
+    .cr-shine-layer {
+      position: absolute; inset: 0;
+      border-radius: inherit; pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s;
+      background: radial-gradient(
+        circle 80px at var(--cr-mx, 50%) var(--cr-my, 50%),
+        rgba(255,255,255,0.1) 0%,
+        transparent 70%
+      );
+    }
+
+    /* ── Credits: image fallback initials ───────────────────────────── */
+    .cr-avatar-fallback {
+      width: 76px; height: 76px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.04);
+      border: 2px solid rgba(255,255,255,0.1);
+      font-size: 0.95rem; font-weight: 900;
+      font-family: var(--orbit-ui); letter-spacing: 0.04em;
+      color: var(--cr-role-color, #a78bfa);
+      text-shadow: 0 0 12px var(--cr-role-color, #a78bfa);
+      box-shadow: 0 0 18px rgba(0,0,0,0.4),
+                  inset 0 0 14px rgba(255,255,255,0.03);
+      transition: border-color 0.22s;
+    }
+    .cr-card--owner:hover .cr-avatar-fallback  { border-color: rgba(251,191,36,0.55); }
+    .cr-card--admin:hover  .cr-avatar-fallback { border-color: rgba(100,220,255,0.55); }
+    .cr-card--helper:hover .cr-avatar-fallback { border-color: rgba(52,211,153,0.55); }
+
+    /* ── Orbit Feed terminal ─────────────────────────────────────────── */
+    .gc-hud-feed-section { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 0.5rem; }
+    .gc-orbit-feed {
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1px;
+      scrollbar-width: none;
+    }
+    .gc-orbit-feed::-webkit-scrollbar { display: none; }
+    .gc-orbit-line {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 0.28rem;
+      padding: 0.22rem 0.3rem;
+      border-radius: 4px;
+      animation: gcMsgEnter 0.2s cubic-bezier(0.23,1,0.32,1) both;
+    }
+    .gc-orbit-ts {
+      font-size: 0.46rem; font-family: 'Courier New', monospace;
+      color: rgba(100,220,255,0.3); letter-spacing: 0.02em;
+      line-height: 1.6; white-space: nowrap; padding-top: 1px;
+    }
+    .gc-orbit-msg {
+      font-size: 0.57rem; font-family: var(--orbit-ui);
+      line-height: 1.4; word-break: break-word;
+    }
+    /* Colour coding by event type */
+    .gc-orbit-line--sys  .gc-orbit-msg { color: rgba(100,220,255,0.5); }
+    .gc-orbit-line--stat .gc-orbit-msg { color: rgba(255,255,255,0.45); }
+    .gc-orbit-line--evt  .gc-orbit-msg { color: rgba(167,139,250,0.72); }
+    .gc-orbit-line--score .gc-orbit-msg {
+      color: rgba(251,191,36,0.8);
+      text-shadow: 0 0 6px rgba(251,191,36,0.3);
+    }
+    /* Hover reveals full brightness */
+    .gc-orbit-line:hover { background: rgba(255,255,255,0.03); }
+    .gc-orbit-line:hover .gc-orbit-msg { filter: brightness(1.4); }
+    .gc-orbit-line:hover .gc-orbit-ts  { color: rgba(100,220,255,0.6); }
 
     /* ── Starfield canvas ── */
     #starfieldCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }

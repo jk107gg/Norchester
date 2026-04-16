@@ -813,13 +813,28 @@
 
             <div class="gc-hud-divider"></div>
 
-            <!-- Recent Activity -->
-            <div class="gc-hud-section gc-hud-activity-section">
+            <!-- Game Activity -->
+            <div class="gc-hud-section">
               <div class="gc-hud-heading">
                 <span class="gc-hud-dot purple"></span>Activity
               </div>
               <div class="gc-hud-feed" id="gcHudFeed">
                 <div class="gc-hud-empty">No activity yet</div>
+              </div>
+            </div>
+
+            <div class="gc-hud-divider"></div>
+
+            <!-- Orbit Feed — terminal log -->
+            <div class="gc-hud-section gc-hud-feed-section">
+              <div class="gc-hud-heading">
+                <span class="gc-hud-dot cyan"></span>Orbit Feed
+              </div>
+              <div class="gc-orbit-feed" id="gcOrbitFeed">
+                <div class="gc-orbit-line gc-orbit-line--sys">
+                  <span class="gc-orbit-ts">--:--</span>
+                  <span class="gc-orbit-msg">Initialising…</span>
+                </div>
               </div>
             </div>
 
@@ -1049,10 +1064,12 @@
             <div class="cr-grid">
 
               <!-- Vivex — Owner -->
-              <div class="cr-card cr-card--owner">
+              <div class="cr-card cr-card--owner" onmousemove="crShine(event,this)" onmouseleave="crShineReset(this)">
                 <div class="cr-card-glow"></div>
+                <div class="cr-shine-layer"></div>
                 <div class="cr-avatar-wrap">
-                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="Vivex avatar" loading="lazy"/>
+                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="Vivex avatar" loading="lazy"
+                    onerror="crImgFallback(this,'V','owner')"/>
                   <span class="cr-badge cr-badge--owner">Owner</span>
                 </div>
                 <div class="cr-name">Vivex</div>
@@ -1060,10 +1077,12 @@
               </div>
 
               <!-- FlamingoKing — Admin -->
-              <div class="cr-card cr-card--admin">
+              <div class="cr-card cr-card--admin" onmousemove="crShine(event,this)" onmouseleave="crShineReset(this)">
                 <div class="cr-card-glow"></div>
+                <div class="cr-shine-layer"></div>
                 <div class="cr-avatar-wrap">
-                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="FlamingoKing avatar" loading="lazy"/>
+                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="FlamingoKing avatar" loading="lazy"
+                    onerror="crImgFallback(this,'FK','admin')"/>
                   <span class="cr-badge cr-badge--admin">Admin</span>
                 </div>
                 <div class="cr-name">FlamingoKing</div>
@@ -1071,10 +1090,12 @@
               </div>
 
               <!-- Atl Alex — Helper -->
-              <div class="cr-card cr-card--helper">
+              <div class="cr-card cr-card--helper" onmousemove="crShine(event,this)" onmouseleave="crShineReset(this)">
                 <div class="cr-card-glow"></div>
+                <div class="cr-shine-layer"></div>
                 <div class="cr-avatar-wrap">
-                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="Atl Alex avatar" loading="lazy"/>
+                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="Atl Alex avatar" loading="lazy"
+                    onerror="crImgFallback(this,'AA','helper')"/>
                   <span class="cr-badge cr-badge--helper">Helper</span>
                 </div>
                 <div class="cr-name">Atl Alex</div>
