@@ -904,6 +904,7 @@
     #homePanel { flex-direction: column; background: transparent; }
     #placeholderPanel { align-items: center; justify-content: center; background: transparent; position: relative; }
     #gameIframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; z-index: 5; }
+    #phIframeError { display: none; position: absolute; inset: 0; z-index: 6; background: rgba(10,10,10,0.96); align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; }
     #aiChatPanel { flex-direction: column; background: transparent; }
 
     /* ── AI Chat Panel ── */

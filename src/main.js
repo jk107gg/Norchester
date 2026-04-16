@@ -73,10 +73,32 @@
     function openOverlay() {
       document.getElementById('gameOverlay').classList.add('open');
       initLimelightNav();
+      // Restore theme
+      try {
+        const saved = localStorage.getItem('orbit-theme');
+        if (saved && THEMES[saved]) {
+          applyTheme(saved);
+          document.querySelectorAll('.sb-theme-dot').forEach(d => d.classList.remove('active'));
+          const dot = [...document.querySelectorAll('.sb-theme-dot')].find(d => d.title === THEMES[saved].name);
+          if (dot) dot.classList.add('active');
+        }
+      } catch(e) {}
+      try { ensureFirebase(); }     catch(e) {}
+      try { updateProfileDisplay(); } catch(e) {}
+      try { trackSession(); }       catch(e) {}
+      try { loadStats(); }          catch(e) {}
+      try { renderRecent(); }       catch(e) {}
+      try { renderFeatured(); }     catch(e) {}
+      try { renderGrid(); }         catch(e) { console.error('renderGrid failed:', e); }
+      try { initStarfield(); }      catch(e) {}
     }
 
     function closeOverlay() {
       document.getElementById('gameOverlay').classList.remove('open');
+      if (typeof starfieldRaf !== 'undefined' && starfieldRaf) {
+        cancelAnimationFrame(starfieldRaf);
+        starfieldRaf = null;
+      }
     }
 
     // ── Topbar LimelightNav ───────────────────────────────────────────
@@ -561,17 +583,49 @@
       if (url === '__FNF_URL')   url = (window.__FNF_URL   || '');
       if (url === '__TNNMN_URL') url = (window.__TNNMN_URL || '');
 
-      const iframe    = document.getElementById('gameIframe');
-      const phContent = document.getElementById('phContent');
+      const iframe      = document.getElementById('gameIframe');
+      const phContent   = document.getElementById('phContent');
+      const phError     = document.getElementById('phIframeError');
+      const phDirectLink= document.getElementById('phDirectLink');
+      const phBlockedTitle = document.getElementById('phBlockedTitle');
+
+      // Reset error panel
+      if (phError) phError.style.display = 'none';
+
       if (url) {
-        if (iframe)    { iframe.src = url; iframe.style.display = 'block'; }
-        if (phContent) phContent.style.display = 'none';
+        if (phContent)      phContent.style.display = 'none';
+        if (phDirectLink)   phDirectLink.href = url;
+        if (phBlockedTitle) phBlockedTitle.textContent = g.name + ' — blocked by host';
+
+        if (iframe) {
+          iframe.src = 'about:blank';           // reset first so load event fires reliably
+          iframe.style.display = 'block';
+
+          // Detect iframe block: if load fires but contentDocument is inaccessible/empty
+          // due to X-Frame-Options, show fallback after a short grace period
+          const _loadHandler = function() {
+            iframe.removeEventListener('load', _loadHandler);
+            try {
+              // Cross-origin: accessing contentDocument throws or returns null
+              const doc = iframe.contentDocument || iframe.contentWindow?.document;
+              if (!doc || doc.URL === 'about:blank') throw new Error('blocked');
+            } catch(e) {
+              // Blocked — show fallback
+              iframe.style.display = 'none';
+              if (phError) { phError.style.display = 'flex'; }
+            }
+          };
+          iframe.addEventListener('load', _loadHandler);
+          // Use rAF so blank reset settles before loading new URL
+          requestAnimationFrame(() => { iframe.src = url; });
+        }
       } else {
-        if (iframe)    { iframe.src = 'about:blank'; iframe.style.display = 'none'; }
-        if (phContent) phContent.style.display = '';
+        if (iframe)         { iframe.src = 'about:blank'; iframe.style.display = 'none'; }
+        if (phContent)      { phContent.style.display = ''; }
+        if (phError)          phError.style.display = 'none';
         document.getElementById('phIcon').textContent  = g.icon;
         document.getElementById('phTitle').textContent = g.name;
-        document.getElementById('phSub').textContent   = "This game isn't available yet.";
+        document.getElementById('phSub').textContent   = "URL not set yet — check back soon.";
       }
     }
 
@@ -604,35 +658,7 @@
       playGame(pool[Math.floor(Math.random() * pool.length)].id);
     }
 
-    // ── Init home on overlay open ─────────────────────────────────────
-    const _origOpenOverlay = openOverlay;
-    openOverlay = function() {
-      _origOpenOverlay();
-      // Restore theme dot
-      try {
-        const saved = localStorage.getItem('orbit-theme');
-        if (saved && THEMES[saved]) {
-          applyTheme(saved);
-          document.querySelectorAll('.sb-theme-dot').forEach(d => d.classList.remove('active'));
-          const dot = [...document.querySelectorAll('.sb-theme-dot')]
-            .find(d => d.title === THEMES[saved].name);
-          if (dot) dot.classList.add('active');
-        }
-      } catch(e) {}
-      ensureFirebase();
-      updateProfileDisplay();
-      trackSession();
-      loadStats();
-      renderRecent();
-      renderFeatured();
-      renderGrid();
-      initStarfield();
-    };
-    const _origCloseOverlay = closeOverlay;
-    closeOverlay = function() {
-      _origCloseOverlay();
-      if (starfieldRaf) { cancelAnimationFrame(starfieldRaf); starfieldRaf = null; }
-    };
+    // openOverlay / closeOverlay fully defined above — no reassignment needed
 
     // ── AI Chat ──────────────────────────────────────────────────────
     let acChips = [];
