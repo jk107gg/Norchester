@@ -418,41 +418,88 @@
     }
 
     // ── Render game grid ───────────────────────────────────────────────
+    let _gridInitialized = false;
+
     function renderGrid() {
       const grid = document.getElementById('homeGrid');
       if (!grid) return;
+
+      // ── Build all cards once ──────────────────────────────────────
+      if (!_gridInitialized) {
+        _gridInitialized = true;
+        grid.innerHTML = GAMES.map(g => {
+          const cc   = CAT_COLORS[g.cat]    || { bg:'rgba(255,255,255,0.06)', text:'#888' };
+          const grad = CAT_GRADIENTS[g.cat] || 'linear-gradient(145deg,#111,#000)';
+          const fav  = favorites.has(g.id);
+          return `<div class="game-card" id="gc-${g.id}" data-id="${g.id}" data-name="${g.name.toLowerCase()}" data-cat="${g.cat}">
+            <div class="gc-icon-wrap">
+              <div class="gc-icon-bg" style="background:${grad}"></div>
+              <span class="gc-icon">${g.icon}</span>
+            </div>
+            <div class="gc-info">
+              <div class="gc-name" title="${g.name}">${g.name}</div>
+              <div class="gc-meta">
+                <span class="gc-tag" style="background:${cc.bg};color:${cc.text}">${g.cat}</span>
+                <span class="gc-plays">${fmtPlays(g.plays)}</span>
+              </div>
+            </div>
+            <button class="gc-fav${fav?' faved':''}" onclick="toggleFav(${g.id},this,event)" title="${fav?'Unfavorite':'Favorite'}">♥</button>
+            <div class="gc-play-overlay">
+              <button class="gc-play-btn" onclick="playGame(${g.id})">▶ Play</button>
+            </div>
+          </div>`;
+        }).join('');
+
+        // Inject no-results node inside grid (spans all columns)
+        const noRes = document.createElement('div');
+        noRes.id = 'homeNoResults';
+        noRes.className = 'home-no-results';
+        noRes.style.display = 'none';
+        noRes.innerHTML = `<span class="home-no-results-icon">◈</span>No games found in the sector`;
+        grid.appendChild(noRes);
+      }
+
+      // ── Filter with animation ─────────────────────────────────────
       const q   = homeSearchQ.toLowerCase();
       const cat = activeCat;
-      const visible = GAMES.filter(g =>
-        (cat === 'All' || g.cat === cat) &&
-        (!q || g.name.toLowerCase().includes(q) || g.cat.toLowerCase().includes(q))
-      );
-      if (visible.length === 0) {
-        grid.innerHTML = `<div class="home-no-results"><span class="home-no-results-icon">◈</span>No games match "${homeSearchQ || cat}"</div>`;
-        return;
-      }
-      grid.innerHTML = visible.map(g => {
-        const cc   = CAT_COLORS[g.cat]     || { bg:'rgba(255,255,255,0.06)', text:'#888' };
-        const grad = CAT_GRADIENTS[g.cat]  || 'linear-gradient(145deg,#111,#000)';
-        const fav  = favorites.has(g.id);
-        return `<div class="game-card" id="gc-${g.id}">
-          <div class="gc-icon-wrap">
-            <div class="gc-icon-bg" style="background:${grad}"></div>
-            <span class="gc-icon">${g.icon}</span>
-          </div>
-          <div class="gc-info">
-            <div class="gc-name" title="${g.name}">${g.name}</div>
-            <div class="gc-meta">
-              <span class="gc-tag" style="background:${cc.bg};color:${cc.text}">${g.cat}</span>
-              <span class="gc-plays">${fmtPlays(g.plays)}</span>
-            </div>
-          </div>
-          <button class="gc-fav${fav?' faved':''}" onclick="toggleFav(${g.id},this,event)" title="${fav?'Unfavorite':'Favorite'}">♥</button>
-          <div class="gc-play-overlay">
-            <button class="gc-play-btn" onclick="playGame(${g.id})">▶ Play</button>
-          </div>
-        </div>`;
-      }).join('');
+      let visibleCount = 0;
+
+      grid.querySelectorAll('.game-card[data-id]').forEach(card => {
+        const matches =
+          (cat === 'All' || card.dataset.cat === cat) &&
+          (!q || card.dataset.name.includes(q) || card.dataset.cat.toLowerCase().includes(q));
+
+        if (matches) {
+          visibleCount++;
+          // Cancel pending hide
+          if (card._hideTimer) { clearTimeout(card._hideTimer); card._hideTimer = null; }
+          card.classList.remove('gc-card-hiding');
+          if (card.style.display === 'none') {
+            // Re-show with entrance animation
+            card.style.removeProperty('display');
+            void card.offsetWidth; // force reflow so animation triggers
+            card.classList.add('gc-card-appearing');
+            setTimeout(() => card.classList.remove('gc-card-appearing'), 280);
+          }
+        } else {
+          if (card.style.display !== 'none' && !card.classList.contains('gc-card-hiding')) {
+            card.classList.add('gc-card-hiding');
+            card._hideTimer = setTimeout(() => {
+              card.style.display = 'none';
+              card.classList.remove('gc-card-hiding');
+              card._hideTimer = null;
+            }, 220);
+          }
+        }
+      });
+
+      // ── Counter ───────────────────────────────────────────────────
+      const counter = document.getElementById('homeGameCount');
+      if (counter) counter.textContent = `Showing ${visibleCount} Game${visibleCount !== 1 ? 's' : ''}`;
+
+      // ── No results ────────────────────────────────────────────────
+      const noRes = document.getElementById('homeNoResults');
+      if (noRes) noRes.style.display = visibleCount === 0 ? 'block' : 'none';
     }
 
     // ── Stats ─────────────────────────────────────────────────────────
