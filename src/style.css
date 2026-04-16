@@ -1051,23 +1051,9 @@
     #globalChatPanel { flex-direction: row; background: transparent; align-items: stretch; }
     #dmPanel { flex-direction: row; background: transparent; }
 
-    /* ── HUD Live Activity sidebar ─────────────────────────────────── */
+    /* ── HUD Live Activity sidebar — hidden ── */
     .gc-hud-panel {
-      width: 190px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      padding: 0.85rem 0.7rem 1rem;
-      /* Same holographic glass as bubbles */
-      background: rgba(15, 15, 20, 0.45);
-      border-left: 1px solid rgba(100, 220, 255, 0.08);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: -4px 0 28px rgba(0, 0, 0, 0.3), inset 1px 0 0 rgba(100, 220, 255, 0.04);
-      overflow: hidden;
-      position: relative;
-      z-index: 2;
+      display: none !important;
     }
     /* Subtle top-corner reflection matching bubbles */
     .gc-hud-panel::before {
@@ -1287,15 +1273,12 @@
       to   { opacity: 1; transform: translateX(0);     }
     }
     .gc-bubble {
-      /* Stars visible through semi-transparent dark bg */
-      background: rgba(15, 15, 20, 0.4);
+      background: rgba(10, 10, 10, 0.9);
       /* Holographic cyan glow border */
       border: 1px solid rgba(100, 220, 255, 0.1);
       border-left: 2px solid rgba(100, 220, 255, 0.45);
       border-radius: 12px;
       padding: 0.55rem 0.72rem 0.55rem 0.78rem;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       /* Neon outer glow + depth shadow */
       box-shadow:
         0 0 15px rgba(123, 31, 162, 0.2),
@@ -2136,17 +2119,19 @@
     }
     .home-heading {
       font-family: var(--orbit-ui);
-      font-size: 7.5rem;
+      font-size: 9rem;
       font-style: italic;
       font-weight: 800;
       color: var(--gblue);
       line-height: 0.9;
+      margin-top: 15vh;
       margin-bottom: 0.4rem;
       letter-spacing: -0.05em;
       animation: orbitGlow 3.5s ease-in-out infinite;
       user-select: none;
       transition: color 0.3s ease;
       text-align: center;
+      width: 100%;
       position: relative;
     }
     /* Radial background glow blob behind title */
@@ -2173,49 +2158,48 @@
       color: rgba(255,255,255,0.18);
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      margin-bottom: 1.6rem;
+      margin-bottom: 0.85rem;
       user-select: none;
       text-align: center;
     }
 
     /* ── Stat pills — accent glow ── */
     .home-stats-row {
-      display: flex; gap: 0.65rem; margin-bottom: 1.75rem;
+      display: flex; gap: 0.55rem; margin-bottom: 0.7rem;
       flex-wrap: nowrap; justify-content: center;
       width: 100%; max-width: 700px;
     }
     .stat-pill {
       flex: 1; min-width: 0;
-      background: rgba(255,255,255,0.02);
+      background: rgba(10, 10, 10, 0.82);
       border: 1px solid rgba(var(--gblue-rgb), 0.2);
-      border-radius: 12px;
-      padding: 1rem 1.5rem;
-      display: flex; flex-direction: row; align-items: center; gap: 1rem;
-      box-shadow: 0 0 18px rgba(var(--gblue-rgb), 0.05), inset 0 1px 0 rgba(255,255,255,0.03);
-      backdrop-filter: blur(12px);
+      border-radius: 10px;
+      padding: 0.45rem 1rem;
+      display: flex; flex-direction: row; align-items: center; gap: 0.75rem;
+      box-shadow: 0 0 14px rgba(var(--gblue-rgb), 0.05), inset 0 1px 0 rgba(255,255,255,0.03);
       transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
     }
     .stat-pill:hover {
       border-color: rgba(var(--gblue-rgb), 0.5);
-      background: rgba(var(--gblue-rgb), 0.04);
-      box-shadow: 0 0 32px rgba(var(--gblue-rgb), 0.14), inset 0 1px 0 rgba(255,255,255,0.06);
+      background: rgba(var(--gblue-rgb), 0.08);
+      box-shadow: 0 0 22px rgba(var(--gblue-rgb), 0.14), inset 0 1px 0 rgba(255,255,255,0.06);
     }
     .stat-pill-val {
-      font-size: 1.7rem; font-weight: 800; color: var(--gblue);
+      font-size: 1.2rem; font-weight: 800; color: var(--gblue);
       font-family: var(--orbit-ui); line-height: 1; display: block;
-      text-shadow: 0 0 16px rgba(var(--gblue-rgb), 0.75);
+      text-shadow: 0 0 12px rgba(var(--gblue-rgb), 0.7);
       transition: color 0.3s ease, text-shadow 0.3s ease;
       flex-shrink: 0;
     }
     .stat-pill-lbl {
-      font-size: 0.6rem; color: rgba(255,255,255,0.22);
+      font-size: 0.58rem; color: rgba(255,255,255,0.22);
       text-transform: uppercase; letter-spacing: 0.14em;
       font-family: var(--orbit-ui); display: block; font-weight: 600;
       white-space: nowrap;
     }
 
     /* ── Home search bar ── */
-    .home-search-wrap { position: relative; margin-bottom: 1.75rem; width: 100%; max-width: 700px; }
+    .home-search-wrap { position: relative; margin-bottom: 0.85rem; width: 100%; max-width: 700px; }
     .home-search-icon {
       position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
       color: rgba(255,255,255,0.2); font-size: 0.92rem; pointer-events: none;
@@ -2244,12 +2228,12 @@
     .home-section-lbl {
       font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em;
       text-transform: uppercase; color: rgba(255,255,255,0.18);
-      margin-bottom: 0.6rem; font-family: var(--orbit-ui);
+      margin-bottom: 0.4rem; font-family: var(--orbit-ui);
       width: 100%; max-width: 700px;
     }
 
     /* ── Recently Played chips ── */
-    .recent-chips-row { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.25rem; margin-bottom: 1.75rem; scrollbar-width: none; width: 100%; max-width: 700px; }
+    .recent-chips-row { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.25rem; margin-bottom: 0.85rem; scrollbar-width: none; width: 100%; max-width: 700px; }
     .recent-chips-row::-webkit-scrollbar { display: none; }
     .recent-chip {
       display: flex; align-items: center; gap: 0.35rem;
@@ -2270,17 +2254,12 @@
     .recent-chip-empty { font-size: 0.7rem; color: rgba(255,255,255,0.1); font-family: var(--orbit-ui); padding: 0.3rem 0; }
 
     /* ── Featured row ── */
-    .home-featured-row { display: grid; grid-template-columns: 1fr 218px; gap: 1rem; margin-bottom: 1.75rem; width: 100%; max-width: 700px; }
+    .home-featured-row { display: grid; grid-template-columns: 1fr 218px; gap: 1rem; margin-bottom: 0.85rem; width: 100%; max-width: 700px; }
 
-    /* Featured card — deep accent gradient with glassmorphism */
+    /* Featured card */
     .featured-card {
       position: relative; overflow: hidden;
-      background: linear-gradient(140deg,
-        rgba(var(--gblue-rgb), 0.14) 0%,
-        rgba(var(--gblue-rgb), 0.04) 45%,
-        rgba(0,0,0,0) 100%);
-      backdrop-filter: blur(20px) saturate(1.4);
-      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      background: rgba(10, 10, 18, 0.9);
       border: 1px solid rgba(var(--gblue-rgb), 0.28);
       border-radius: 12px; padding: 1.4rem 1.6rem;
       display: flex; flex-direction: column; gap: 0.65rem;
@@ -2343,9 +2322,7 @@
 
     /* AI Bot card */
     .ai-bot-card {
-      background: rgba(255,255,255,0.025);
-      backdrop-filter: blur(16px) saturate(1.3);
-      -webkit-backdrop-filter: blur(16px) saturate(1.3);
+      background: rgba(10, 10, 10, 0.9);
       border: 1px solid rgba(255,255,255,0.09);
       border-radius: 12px; padding: 1.2rem 1.3rem;
       display: flex; flex-direction: column; gap: 0.6rem;
@@ -2446,9 +2423,7 @@
 
     /* ── Game card ── */
     .game-card {
-      background: rgba(255,255,255,0.032);
-      backdrop-filter: blur(18px) saturate(1.5);
-      -webkit-backdrop-filter: blur(18px) saturate(1.5);
+      background: rgba(12, 12, 18, 0.88);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 12px;
       overflow: hidden; cursor: pointer; position: relative;
