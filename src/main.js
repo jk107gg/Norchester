@@ -147,12 +147,14 @@
       document.getElementById('creditsPanel').classList.toggle('active', isCredits);
       document.getElementById('placeholderPanel').classList.toggle('active', isPlaceholder);
       if (isPlaceholder) {
-        const isGame = el.classList.contains('game-item');
-        document.getElementById('phIcon').textContent = isGame ? '▶' : '◈';
-        document.getElementById('phTitle').textContent = isGame ? label : label + ' — Coming Soon';
-        document.getElementById('phSub').textContent = isGame
-          ? 'This game will be playable in a future update.'
-          : 'This feature will be available in a future update.';
+        // Non-game placeholder (changelog, etc.) — reset iframe, show "coming soon"
+        const iframe    = document.getElementById('gameIframe');
+        const phContent = document.getElementById('phContent');
+        if (iframe)    { iframe.src = 'about:blank'; iframe.style.display = 'none'; }
+        if (phContent) phContent.style.display = '';
+        document.getElementById('phIcon').textContent  = '◈';
+        document.getElementById('phTitle').textContent = label + ' — Coming Soon';
+        document.getElementById('phSub').textContent   = 'This feature will be available in a future update.';
       }
       if (isAiChat)       initAcGlow();
       if (isGlobalChat)   initGlobalChat();
@@ -227,40 +229,40 @@
 
     // ── Game data ────────────────────────────────────────────────────
     const GAMES = [
-      { id:1,  name:'Tetrix',        cat:'Puzzle',  icon:'▦',  plays:2847, desc:'Stack falling blocks and clear lines before the stack reaches the top.' },
-      { id:2,  name:'Neon Snake',    cat:'Arcade',  icon:'◈',  plays:1923, desc:'Guide your glowing snake — eat, grow, and avoid yourself.' },
-      { id:3,  name:'2048',          cat:'Puzzle',  icon:'⬡',  plays:2341, desc:'Slide and merge numbered tiles to reach the elusive 2048 tile.' },
-      { id:4,  name:'Minefield',     cat:'Classic', icon:'⚡', plays:1456, desc:'Uncover every safe square without detonating a single mine.' },
-      { id:5,  name:'Flapbird',      cat:'Arcade',  icon:'▶',  plays:1788, desc:'Tap to keep your bird airborne through an endless pipe maze.' },
-      { id:6,  name:'Brickout',      cat:'Classic', icon:'▦',  plays: 934, desc:'Break every brick with a bouncing ball — don\'t let it drop.' },
-      { id:7,  name:'Pac-Grid',      cat:'Arcade',  icon:'◉',  plays:1654, desc:'Eat every dot on the grid while outsmarting four hungry ghosts.' },
-      { id:8,  name:'Starblast',     cat:'Arcade',  icon:'✦',  plays:1122, desc:'Pilot a lone fighter through relentless waves of asteroid clusters.' },
-      { id:9,  name:'Pong Duel',     cat:'Sports',  icon:'◎',  plays: 876, desc:'Classic paddle battle — first to 11 wins the set.' },
-      { id:10, name:'Chess Classic', cat:'Classic', icon:'♟',  plays:2156, desc:'Full rules chess against an AI opponent at adjustable difficulty.' },
-      { id:11, name:'Sudoku Pro',    cat:'Puzzle',  icon:'▦',  plays:1834, desc:'Fill the 9×9 grid so every row, column, and box holds 1–9.' },
-      { id:12, name:'Wordcraft',     cat:'Chill',   icon:'◇',  plays:1245, desc:'Find hidden words in a shuffled letter grid before time runs out.' },
-      { id:13, name:'Memory Grid',   cat:'Puzzle',  icon:'⬡',  plays: 987, desc:'Flip cards and match every pair using pure memory.' },
-      { id:14, name:'Card Solitaire',cat:'Chill',   icon:'◈',  plays:1567, desc:'Classic Klondike solitaire — build four foundation piles, ace to king.' },
-      { id:15, name:'Mahjong Tiles', cat:'Chill',   icon:'▦',  plays:1089, desc:'Clear the board by matching identical free tiles from the pyramid.' },
-      { id:16, name:'Tic Tac Toe',   cat:'Classic', icon:'✕',  plays: 678, desc:'Noughts and crosses — claim three in a row before your opponent does.' },
-      { id:17, name:'Column Drop',   cat:'Puzzle',  icon:'▼',  plays:1345, desc:'Drop discs and connect four in a row horizontally, vertically, or diagonally.' },
-      { id:18, name:'Sea Battle',    cat:'Classic', icon:'◉',  plays: 756, desc:'Sink the enemy fleet before they find yours. Five ships, ten rounds.' },
-      { id:19, name:'Tower Rush',    cat:'RPG',     icon:'⬡',  plays:1456, desc:'Place towers strategically to stop waves of creeps from crossing the map.' },
-      { id:20, name:'Cookie Empire', cat:'Chill',   icon:'∞',  plays:2089, desc:'Click to bake cookies, then automate production into a vast cookie empire.' },
-      { id:21, name:'TypeSpeed',     cat:'Rhythm',  icon:'▶',  plays:1678, desc:'Words rain down — type them before they hit the floor. Beat your WPM record.' },
-      { id:22, name:'Asteroid Field',cat:'Arcade',  icon:'✦',  plays:1234, desc:'Rotate, thrust, and blast asteroids in the zero-gravity void of space.' },
-      { id:23, name:'Bubble Pop',    cat:'Chill',   icon:'◎',  plays:1567, desc:'Aim and shoot bubbles to form matching groups of three or more.' },
-      { id:24, name:'Mole Hunt',     cat:'Fun',     icon:'⚡', plays: 892, desc:'Whack every mole that pops up — they get faster each round.' },
-      { id:25, name:'Color Simon',   cat:'Classic', icon:'◈',  plays: 743, desc:'Repeat the growing colour sequence from memory as long as you can.' },
-      { id:26, name:'Hangman',       cat:'Classic', icon:'◇',  plays: 934, desc:'Guess the hidden word letter by letter before the figure is complete.' },
-      { id:27, name:'Blackjack 21',  cat:'Classic', icon:'♠',  plays:1123, desc:'Hit or stand — beat the dealer to 21 without going bust.' },
-      { id:28, name:'Pixel Dungeon', cat:'Horror',  icon:'▦',  plays:1789, desc:'Descend floor by floor through a procedurally generated dungeon of horrors.' },
-      { id:29, name:'Number Slide',  cat:'Puzzle',  icon:'⬡',  plays: 645, desc:'Slide numbered tiles into order using the single empty space.' },
-      { id:30, name:'Word Hunt',     cat:'Puzzle',  icon:'◇',  plays:1234, desc:'Swipe through a letter grid to find as many words as possible.' },
-      { id:31, name:'Gravity Shift', cat:'Racing',  icon:'▼',  plays:1456, desc:'Flip gravity on/off to navigate a speeding craft through tight corridors.' },
-      { id:32, name:'Orbit Classic', cat:'Classic', icon:'◉',  plays:1678, desc:'The original Orbit mini-game — circle the planet and collect stars.' },
-      { id:33, name:'Idle Kingdom',  cat:'Chill',   icon:'∞',  plays:1234, desc:'Build a kingdom while away — return to find your coffers overflowing.' },
-      { id:34, name:'Hex Merge',     cat:'Puzzle',  icon:'⬡',  plays: 978, desc:'Place and merge numbered hexagons to reach ever-higher tile values.' },
+      { id:1,  name:'Ultrakill',             cat:'Arcade',  icon:'⚡', plays:3241, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/ultrakill/index.html',                    desc:'Non-stop bullet-hell action — parry projectiles and move at the speed of death.' },
+      { id:2,  name:'Untitled Goose Game',   cat:'Fun',     icon:'◈',  plays:2876, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/ugg/index.html',                         desc:'Cause mayhem as an absolutely horrible goose in a quiet English village.' },
+      { id:3,  name:'Henry Stickman',        cat:'Fun',     icon:'▶',  plays:2543, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/hs/game/index.html',                     desc:'Help Henry escape with skill, luck, and a lot of ridiculous choices.' },
+      { id:4,  name:'Pac-Man',               cat:'Arcade',  icon:'◉',  plays:4102, url:'https://freepacman.org/',                                                             desc:'Navigate the maze, eat every dot, and dodge four hungry ghosts.' },
+      { id:5,  name:'Flappy Bird',           cat:'Arcade',  icon:'▶',  plays:3987, url:'https://flappybird.io/',                                                              desc:'Tap to keep your bird alive through an endless corridor of pipes.' },
+      { id:6,  name:'Five Epsteins',         cat:'Fun',     icon:'◇',  plays:1834, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/fiveepsteins/index.html',                 desc:'Five nights of suspense in a very unconventional setting.' },
+      { id:7,  name:'Friday Night Funkin',   cat:'Rhythm',  icon:'◎',  plays:3654, url:'__FNF_URL',                                                                           desc:'Rap battles to the death — hit every beat and keep your girlfriend impressed.' },
+      { id:8,  name:'FNAF',                  cat:'Horror',  icon:'⚡', plays:3210, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/fnaf/game/index.html',                    desc:'Survive five nights watching the cameras while animatronics hunt you down.' },
+      { id:9,  name:'Moto X3M',              cat:'Racing',  icon:'▼',  plays:2765, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/projects/motox3m/index.html',             desc:'Conquer insane obstacle courses on your motorcycle without crashing.' },
+      { id:10, name:'Undertale',             cat:'RPG',     icon:'♟',  plays:3498, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/utale/index.html',                       desc:"A tale where you don't have to kill anyone — or you can. Your choice." },
+      { id:11, name:'Soundboard',            cat:'Fun',     icon:'∞',  plays:1567, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/projects/soundboard/index.html',          desc:'An absurd collection of sounds for your amusement. Press everything.' },
+      { id:12, name:"Baldi's Basics",        cat:'Horror',  icon:'⚡', plays:2890, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/baldisbasics/game.html',                  desc:'Collect notebooks in a school that gets increasingly wrong the longer you stay.' },
+      { id:13, name:'Tanuki Sunset',         cat:'Chill',   icon:'▼',  plays:2134, url:'https://d3rtzzzsiu7gdr.cloudfront.net/files/tanuki-sunset/game/index.html',           desc:'Longboard down an endless mountain road as the sky burns orange.' },
+      { id:14, name:'Free Kick Screamers',   cat:'Sports',  icon:'◎',  plays:1678, url:'https://trueedu20.github.io/g77/class-52',                                            desc:'Wind up and strike the perfect free kick through the wall.' },
+      { id:15, name:'Tag',                   cat:'Arcade',  icon:'▶',  plays:1432, url:'https://trueedu20.github.io/g69/class-633',                                           desc:"Classic tag — don't be \"it\" for too long or it's game over." },
+      { id:16, name:'Soccer Random',         cat:'Sports',  icon:'◎',  plays:2345, url:'https://trueedu20.github.io/g26/class-511',                                           desc:'Chaotic physics football — every round a new random twist.' },
+      { id:17, name:'Basket Random',         cat:'Sports',  icon:'◎',  plays:2198, url:'https://trueedu20.github.io/g26/class-436',                                           desc:'Fling ragdoll players at a basketball hoop in hilariously broken physics.' },
+      { id:18, name:'Slope 3',               cat:'Arcade',  icon:'▼',  plays:3102, url:'https://trueedu20.github.io/g22/class-399',                                           desc:'Guide a ball down a steep endless slope — faster every second.' },
+      { id:19, name:'Monster Trucks',        cat:'Racing',  icon:'⚡', plays:1876, url:'https://trueedu20.github.io/g72/class-414',                                           desc:'Smash terrain and crush obstacles with your oversized monster truck.' },
+      { id:20, name:'Drive Mad',             cat:'Racing',  icon:'▶',  plays:2234, url:'https://trueedu20.github.io/g20/class-401',                                           desc:'Balance and speed over brutal obstacle courses without flipping.' },
+      { id:21, name:'Eggy Car',              cat:'Fun',     icon:'◈',  plays:1987, url:'https://trueedu20.github.io/g5/class-463',                                            desc:"Drive a car with an egg on top — don't crack it over the bumps." },
+      { id:22, name:"That's Not My Neighbor",cat:'Horror',  icon:'⚡', plays:2987, url:'__TNNMN_URL',                                                                          desc:'Check IDs at the door — one of them is definitely not human.' },
+      { id:23, name:'Boxing Random',         cat:'Sports',  icon:'◎',  plays:1543, url:'https://sites.google.com/view/drive-u-7-home/boxing-random',                         desc:'Floppy-armed ragdoll boxing — chaotic controls, maximum fun.' },
+      { id:24, name:'Granny',                cat:'Horror',  icon:'⚡', plays:2765, url:'https://sites.google.com/view/drive-u-7-home/renny',                                  desc:'Escape the house before Granny finds you. She hears everything.' },
+      { id:25, name:'Steal a Brainrot',      cat:'Fun',     icon:'◇',  plays:1234, url:'https://sites.google.com/view/drive-u-7-home/obby-swing-for-brainrots',              desc:'A chaotic obstacle run stealing internet-brain energy.' },
+      { id:26, name:'Deltarune',             cat:'RPG',     icon:'♟',  plays:2876, url:'https://gwynfish.github.io/deltarune/',                                               desc:'Kris, Susie, and Ralsei dive into the Dark World. Chapter 1 & 2.' },
+      { id:27, name:'FNAF 2',                cat:'Horror',  icon:'⚡', plays:2543, url:'https://manscod.github.io/other/fnaf2/',                                              desc:'Older animatronics, no doors, just a flashlight and a mask. Good luck.' },
+      { id:28, name:'Granny 2',              cat:'Horror',  icon:'⚡', plays:1987, url:'https://sites.google.com/view/drive-u-7-home/granny-2',                               desc:'Granny brought a friend. Escape before both of them find you.' },
+      { id:29, name:'Granny 3',              cat:'Horror',  icon:'⚡', plays:1654, url:'https://sites.google.com/view/drive-u-7-home/granny-3',                               desc:'The nightmare continues — a bigger house, even less mercy.' },
+      { id:30, name:'Henry Stickman 2',      cat:'Fun',     icon:'▶',  plays:1876, url:'https://gibbat2.github.io/Games/games/henry-stickman/escapingtheprisongame/',         desc:'Henry needs to break out of prison. Again.' },
+      { id:31, name:'Henry Stickman 3',      cat:'Fun',     icon:'▶',  plays:1654, url:'https://jufik.com/swf/game-swf.php?file=stealing-the-diamond.swf',                   desc:'Henry attempts the biggest diamond heist of his career.' },
+      { id:32, name:'Henry Stickman 4',      cat:'Fun',     icon:'▶',  plays:1432, url:'https://www.poki.com/en/g/fleeing-the-complex',                                       desc:'The most elaborate prison break yet — choose your escape route.' },
+      { id:33, name:'Henry Stickman 5',      cat:'Fun',     icon:'▶',  plays:1234, url:'https://henrystickmin.net/en/infiltrating-the-airship',                               desc:'Infiltrate an airship full of traps, guards, and terrible decisions.' },
+      { id:34, name:'Rocket Soccer Derby',   cat:'Sports',  icon:'◎',  plays:2109, url:'https://rocketsoccerderby.gitlab.io/file/',                                           desc:'Rocket-powered cars smashing a ball into a goal. Absolute chaos.' },
     ];
 
     const CAT_COLORS = {
@@ -526,7 +528,8 @@
     function playGame(id) {
       const g = GAMES.find(x => x.id === id);
       if (!g) return;
-      // Add to recent (dedupe, keep newest first)
+
+      // Stats
       recentPlayed = [id, ...recentPlayed.filter(x => x !== id)].slice(0, 10);
       playedToday++;
       document.getElementById('statToday').textContent = playedToday;
@@ -536,19 +539,38 @@
       } catch(e) {}
       saveStats();
       renderRecent();
-      // Log to HUD activity feed
       gcLogActivity(g.icon, `${fbUsername || 'Someone'} started ${g.name}`);
-      // Show placeholder with game name
-      document.getElementById('phIcon').textContent  = g.icon;
-      document.getElementById('phTitle').textContent = g.name;
-      document.getElementById('phSub').textContent   = 'This game will be playable in a future update.';
-      ['homePanel','aiChatPanel','globalChatPanel','dmPanel'].forEach(id =>
-        document.getElementById(id)?.classList.remove('active')
+
+      // Sidebar active
+      document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+      const sbItem = document.querySelector(`#gamesList [data-game-id="${id}"]`);
+      if (sbItem) sbItem.classList.add('active');
+
+      // Topbar + panels
+      document.getElementById('topbarTitle').textContent = g.name;
+      ['homePanel','aiChatPanel','globalChatPanel','dmPanel','settingsPanel',
+       'suggestionsPanel','pricingPanel','creditsPanel'].forEach(p =>
+        document.getElementById(p)?.classList.remove('active')
       );
       document.getElementById('placeholderPanel').classList.add('active');
-      document.getElementById('topbarTitle').textContent = g.name;
-      // Deselect sidebar game items, mark none active
-      document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+
+      // Resolve URL (support window.__FNF_URL / window.__TNNMN_URL variables)
+      let url = g.url || '';
+      if (url === '__FNF_URL')   url = (window.__FNF_URL   || '');
+      if (url === '__TNNMN_URL') url = (window.__TNNMN_URL || '');
+
+      const iframe    = document.getElementById('gameIframe');
+      const phContent = document.getElementById('phContent');
+      if (url) {
+        if (iframe)    { iframe.src = url; iframe.style.display = 'block'; }
+        if (phContent) phContent.style.display = 'none';
+      } else {
+        if (iframe)    { iframe.src = 'about:blank'; iframe.style.display = 'none'; }
+        if (phContent) phContent.style.display = '';
+        document.getElementById('phIcon').textContent  = g.icon;
+        document.getElementById('phTitle').textContent = g.name;
+        document.getElementById('phSub').textContent   = "This game isn't available yet.";
+      }
     }
 
     // ── Favorite toggle ────────────────────────────────────────────────

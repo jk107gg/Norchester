@@ -902,7 +902,8 @@
     .g-panel { display: none; position: absolute; inset: 0; z-index: 1; }
     .g-panel.active { display: flex; }
     #homePanel { flex-direction: column; background: transparent; }
-    #placeholderPanel { align-items: center; justify-content: center; background: transparent; }
+    #placeholderPanel { align-items: center; justify-content: center; background: transparent; position: relative; }
+    #gameIframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; z-index: 5; }
     #aiChatPanel { flex-direction: column; background: transparent; }
 
     /* ── AI Chat Panel ── */
