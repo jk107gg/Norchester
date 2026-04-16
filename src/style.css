@@ -1048,8 +1048,142 @@
     .ac-send-btn.ready:hover { transform: scale(1.09); box-shadow: 0 0 18px rgba(var(--gblue-rgb),0.58); }
 
     /* ── Global Chat & DM Panels ── */
-    #globalChatPanel { flex-direction: column; background: transparent; }
+    #globalChatPanel { flex-direction: row; background: transparent; align-items: stretch; }
     #dmPanel { flex-direction: row; background: transparent; }
+
+    /* ── HUD Live Activity sidebar ─────────────────────────────────── */
+    .gc-hud-panel {
+      width: 190px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0.85rem 0.7rem 1rem;
+      /* Same holographic glass as bubbles */
+      background: rgba(15, 15, 20, 0.45);
+      border-left: 1px solid rgba(100, 220, 255, 0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: -4px 0 28px rgba(0, 0, 0, 0.3), inset 1px 0 0 rgba(100, 220, 255, 0.04);
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+    /* Subtle top-corner reflection matching bubbles */
+    .gc-hud-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 80px;
+      background: linear-gradient(180deg, rgba(100, 220, 255, 0.04) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .gc-hud-section {
+      display: flex; flex-direction: column; gap: 0.5rem;
+      position: relative;
+    }
+    .gc-hud-activity-section { flex: 1; min-height: 0; overflow: hidden; }
+    .gc-hud-heading {
+      display: flex; align-items: center; gap: 0.38rem;
+      font-size: 0.53rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255, 255, 255, 0.22);
+      font-family: var(--orbit-ui);
+    }
+    .gc-hud-dot {
+      width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+      background: #22c55e;
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.8);
+      animation: gcHudPulse 2.4s ease-in-out infinite;
+    }
+    .gc-hud-dot.purple {
+      background: #a78bfa;
+      box-shadow: 0 0 6px rgba(167, 139, 250, 0.8);
+    }
+    @keyframes gcHudPulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+    .gc-hud-divider {
+      height: 1px; margin: 0.7rem 0;
+      background: linear-gradient(90deg, transparent, rgba(100, 220, 255, 0.12), transparent);
+    }
+    /* Avatar grid */
+    .gc-hud-avatars {
+      display: flex; flex-wrap: wrap; gap: 0.38rem; align-items: flex-start;
+    }
+    .gc-hud-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(var(--gblue-rgb), 0.15);
+      border: 1.5px solid rgba(100, 220, 255, 0.28);
+      box-shadow: 0 0 8px rgba(100, 220, 255, 0.14);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.56rem; font-weight: 800; color: rgba(100, 220, 255, 0.9);
+      text-transform: uppercase; cursor: pointer; position: relative;
+      transition: box-shadow 0.18s, border-color 0.18s;
+      font-family: var(--orbit-ui);
+    }
+    .gc-hud-avatar:hover {
+      border-color: rgba(100, 220, 255, 0.65);
+      box-shadow: 0 0 14px rgba(100, 220, 255, 0.35);
+    }
+    .gc-hud-avatar.self {
+      border-color: rgba(167, 139, 250, 0.45);
+      color: rgba(167, 139, 250, 0.9);
+      box-shadow: 0 0 8px rgba(167, 139, 250, 0.22);
+    }
+    /* Green presence dot on each avatar */
+    .gc-hud-avatar-dot {
+      position: absolute; bottom: 0px; right: 0px;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #22c55e;
+      border: 1.5px solid rgba(15, 15, 20, 0.9);
+      box-shadow: 0 0 5px rgba(34, 197, 94, 0.7);
+    }
+    /* Activity feed */
+    .gc-hud-feed {
+      display: flex; flex-direction: column; gap: 0.32rem;
+      overflow-y: auto; max-height: 100%;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(123, 31, 162, 0.35) transparent;
+    }
+    .gc-hud-feed::-webkit-scrollbar { width: 2px; }
+    .gc-hud-feed::-webkit-scrollbar-thumb {
+      background: rgba(123, 31, 162, 0.5); border-radius: 2px;
+    }
+    .gc-hud-feed-item {
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      grid-template-rows: auto auto;
+      gap: 0 0.3rem;
+      padding: 0.3rem 0.4rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 7px;
+      animation: gcMsgEnter 0.24s cubic-bezier(0.23, 1, 0.32, 1) both;
+    }
+    .gc-hud-feed-icon {
+      grid-row: 1 / 3; grid-column: 1;
+      font-size: 0.75rem; line-height: 1;
+      align-self: center;
+    }
+    .gc-hud-feed-text {
+      grid-row: 1; grid-column: 2;
+      font-size: 0.62rem; color: rgba(255, 255, 255, 0.65);
+      font-family: var(--orbit-ui); line-height: 1.35;
+      word-break: break-word;
+    }
+    .gc-hud-feed-time {
+      grid-row: 2; grid-column: 2;
+      font-size: 0.5rem; color: rgba(255, 255, 255, 0.2);
+      font-family: var(--orbit-ui); letter-spacing: 0.03em;
+    }
+    .gc-hud-empty {
+      font-size: 0.6rem; color: rgba(255, 255, 255, 0.15);
+      font-family: var(--orbit-ui); letter-spacing: 0.03em; padding: 0.2rem 0;
+    }
+    /* Hide HUD on narrow screens — keep chat readable */
+    @media (max-width: 640px) {
+      .gc-hud-panel { display: none; }
+    }
 
     /* Online bar */
     .gc-online-bar {
@@ -1705,6 +1839,192 @@
     .game-placeholder-icon { font-size: 3rem; margin-bottom: 1.2rem; color: var(--gblue); opacity: 0.12; display: block; }
     .game-placeholder h2 { font-family: var(--orbit-ui); font-size: 0.88rem; font-weight: 500; color: rgba(255,255,255,0.14); margin-bottom: 0.35rem; }
     .game-placeholder p { font-size: 0.7rem; color: rgba(255,255,255,0.07); font-family: var(--orbit-ui); }
+
+    /* ══════════════════════════════════════════════════════════════════
+       CREDITS PANEL
+    ══════════════════════════════════════════════════════════════════ */
+    #creditsPanel { flex-direction: column; background: transparent; overflow: hidden; }
+
+    .cr-scroll {
+      flex: 1; overflow-y: auto; padding: 2.5rem 2rem 3rem;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0; scrollbar-width: thin;
+      scrollbar-color: rgba(123,31,162,0.35) transparent;
+    }
+    .cr-scroll::-webkit-scrollbar { width: 3px; }
+    .cr-scroll::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(123,31,162,0.6), rgba(100,220,255,0.25));
+      border-radius: 2px;
+    }
+
+    /* Hero heading */
+    .cr-hero {
+      text-align: center; margin-bottom: 2.5rem;
+      animation: gcMsgEnter 0.4s cubic-bezier(0.23,1,0.32,1) both;
+    }
+    .cr-hero-eyebrow {
+      font-size: 0.55rem; font-weight: 800; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.2);
+      font-family: var(--orbit-ui); margin-bottom: 0.55rem;
+    }
+    .cr-hero-title {
+      font-size: 1.65rem; font-weight: 800; font-family: var(--orbit-ui);
+      color: rgba(255,255,255,0.92); letter-spacing: -0.01em;
+      text-shadow: 0 0 40px rgba(var(--gblue-rgb),0.25);
+      margin: 0 0 0.6rem;
+    }
+    .cr-hero-sub {
+      font-size: 0.78rem; color: rgba(255,255,255,0.3);
+      font-family: var(--orbit-ui); margin: 0;
+    }
+
+    /* Responsive grid — 1 col → 3 col */
+    .cr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
+      gap: 1.25rem;
+      justify-content: center;
+      width: 100%; max-width: 760px;
+    }
+
+    /* Base card */
+    .cr-card {
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.7rem; padding: 1.6rem 1rem 1.2rem;
+      background: rgba(15, 15, 20, 0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: default;
+      transition: transform 0.22s cubic-bezier(0.23,1,0.32,1),
+                  box-shadow  0.22s cubic-bezier(0.23,1,0.32,1),
+                  border-color 0.22s;
+      animation: gcMsgEnter 0.38s cubic-bezier(0.23,1,0.32,1) both;
+    }
+    /* Stagger card entrance */
+    .cr-card:nth-child(2) { animation-delay: 0.07s; }
+    .cr-card:nth-child(3) { animation-delay: 0.14s; }
+
+    /* Glass reflection overlay */
+    .cr-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.015) 35%, transparent 55%);
+      border-radius: inherit; pointer-events: none;
+    }
+
+    /* Ambient glow blob (role-coloured, positioned behind card) */
+    .cr-card-glow {
+      position: absolute;
+      width: 120px; height: 120px; border-radius: 50%;
+      top: -30px; left: 50%; transform: translateX(-50%);
+      opacity: 0.18; filter: blur(30px);
+      transition: opacity 0.25s; pointer-events: none;
+    }
+
+    /* ── Owner — gold / ruby ── */
+    .cr-card--owner {
+      border-color: rgba(251,191,36,0.22);
+      box-shadow: 0 0 18px rgba(251,191,36,0.14), 0 4px 20px rgba(0,0,0,0.45);
+    }
+    .cr-card--owner .cr-card-glow { background: #f59e0b; }
+    .cr-card--owner:hover {
+      transform: translateY(-5px) scale(1.03);
+      border-color: rgba(251,191,36,0.5);
+      box-shadow: 0 0 32px rgba(251,191,36,0.3), 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .cr-card--owner:hover .cr-card-glow { opacity: 0.35; }
+    .cr-badge--owner {
+      background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.4);
+      color: #fbbf24;
+      text-shadow: 0 0 8px rgba(251,191,36,0.7);
+    }
+
+    /* ── Admin — cyan / blue ── */
+    .cr-card--admin {
+      border-color: rgba(100,220,255,0.2);
+      box-shadow: 0 0 18px rgba(100,220,255,0.1), 0 4px 20px rgba(0,0,0,0.45);
+    }
+    .cr-card--admin .cr-card-glow { background: #22d3ee; }
+    .cr-card--admin:hover {
+      transform: translateY(-5px) scale(1.03);
+      border-color: rgba(100,220,255,0.45);
+      box-shadow: 0 0 32px rgba(100,220,255,0.26), 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .cr-card--admin:hover .cr-card-glow { opacity: 0.35; }
+    .cr-badge--admin {
+      background: rgba(100,220,255,0.1); border-color: rgba(100,220,255,0.38);
+      color: #67e8f9;
+      text-shadow: 0 0 8px rgba(100,220,255,0.65);
+    }
+
+    /* ── Helper — green / emerald ── */
+    .cr-card--helper {
+      border-color: rgba(52,211,153,0.2);
+      box-shadow: 0 0 18px rgba(52,211,153,0.1), 0 4px 20px rgba(0,0,0,0.45);
+    }
+    .cr-card--helper .cr-card-glow { background: #10b981; }
+    .cr-card--helper:hover {
+      transform: translateY(-5px) scale(1.03);
+      border-color: rgba(52,211,153,0.45);
+      box-shadow: 0 0 32px rgba(52,211,153,0.26), 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .cr-card--helper:hover .cr-card-glow { opacity: 0.35; }
+    .cr-badge--helper {
+      background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.38);
+      color: #6ee7b7;
+      text-shadow: 0 0 8px rgba(52,211,153,0.65);
+    }
+
+    /* Avatar circle */
+    .cr-avatar-wrap { position: relative; display: inline-block; }
+    .cr-avatar {
+      width: 76px; height: 76px; border-radius: 50%;
+      object-fit: cover; display: block;
+      border: 2px solid rgba(255,255,255,0.1);
+      transition: border-color 0.22s;
+    }
+    .cr-card--owner:hover .cr-avatar { border-color: rgba(251,191,36,0.55); }
+    .cr-card--admin:hover  .cr-avatar { border-color: rgba(100,220,255,0.55); }
+    .cr-card--helper:hover .cr-avatar { border-color: rgba(52,211,153,0.55); }
+
+    /* Badge pill — positioned bottom-right of avatar */
+    .cr-badge {
+      position: absolute; bottom: -2px; right: -8px;
+      font-size: 0.5rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; font-family: var(--orbit-ui);
+      padding: 0.12rem 0.45rem; border-radius: 20px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    /* Name + role text */
+    .cr-name {
+      font-size: 0.88rem; font-weight: 800; font-family: var(--orbit-ui);
+      color: rgba(255,255,255,0.9); letter-spacing: 0.02em;
+      text-align: center;
+    }
+    .cr-role {
+      font-size: 0.62rem; color: rgba(255,255,255,0.28);
+      font-family: var(--orbit-ui); letter-spacing: 0.04em;
+      text-align: center; text-transform: uppercase;
+    }
+
+    /* Footer line */
+    .cr-footer {
+      margin-top: 2.8rem;
+      font-size: 0.58rem; color: rgba(255,255,255,0.1);
+      font-family: var(--orbit-ui); letter-spacing: 0.08em;
+      text-transform: uppercase; text-align: center;
+    }
+
+    /* Mobile — single column, smaller padding */
+    @media (max-width: 500px) {
+      .cr-scroll { padding: 1.5rem 1rem 2rem; }
+      .cr-grid { grid-template-columns: 1fr; max-width: 280px; }
+    }
 
     /* ── Starfield canvas ── */
     #starfieldCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }

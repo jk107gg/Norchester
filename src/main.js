@@ -135,7 +135,8 @@
       const isSettings    = (el.id === 'nav-settings');
       const isSuggestions = (el.id === 'nav-suggestions');
       const isPricing     = (el.id === 'nav-pricing');
-      const isPlaceholder = !isHome && !isAiChat && !isGlobalChat && !isDm && !isSettings && !isSuggestions && !isPricing;
+      const isCredits     = (el.id === 'nav-credits');
+      const isPlaceholder = !isHome && !isAiChat && !isGlobalChat && !isDm && !isSettings && !isSuggestions && !isPricing && !isCredits;
       document.getElementById('homePanel').classList.toggle('active', isHome);
       document.getElementById('aiChatPanel').classList.toggle('active', isAiChat);
       document.getElementById('globalChatPanel').classList.toggle('active', isGlobalChat);
@@ -143,6 +144,7 @@
       document.getElementById('settingsPanel').classList.toggle('active', isSettings);
       document.getElementById('suggestionsPanel').classList.toggle('active', isSuggestions);
       document.getElementById('pricingPanel').classList.toggle('active', isPricing);
+      document.getElementById('creditsPanel').classList.toggle('active', isCredits);
       document.getElementById('placeholderPanel').classList.toggle('active', isPlaceholder);
       if (isPlaceholder) {
         const isGame = el.classList.contains('game-item');
@@ -487,6 +489,8 @@
       } catch(e) {}
       saveStats();
       renderRecent();
+      // Log to HUD activity feed
+      gcLogActivity(g.icon, `${fbUsername || 'Someone'} started ${g.name}`);
       // Show placeholder with game name
       document.getElementById('phIcon').textContent  = g.icon;
       document.getElementById('phTitle').textContent = g.name;
@@ -925,6 +929,58 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
           onclick="${u.uid!==fbUid?`openDmWith('${escJ(u.uid)}','${escJ(u.username||'User')}')`:''}"
         ><div class="gc-pill-dot${u.uid===fbUid?' self':''}"></div>${escH(u.username||'User')}</div>`
       ).join('');
+      renderGcHud();
+    }
+
+    // ── HUD panel ─────────────────────────────────────────────────────
+    const gcActivityLog = [];    // [{icon, text, ts}]  max 12 entries
+
+    function gcLogActivity(icon, text) {
+      gcActivityLog.unshift({ icon, text, ts: Date.now() });
+      if (gcActivityLog.length > 12) gcActivityLog.pop();
+      renderGcHudFeed();
+    }
+
+    function renderGcHud() {
+      // Avatars
+      const avatarEl = document.getElementById('gcHudAvatars');
+      if (!avatarEl) return;
+      const online = Object.values(gcOnlineUsers).filter(u => u.online);
+      if (!online.length) {
+        avatarEl.innerHTML = '<div class="gc-hud-empty">No one online</div>';
+      } else {
+        avatarEl.innerHTML = online.map(u => {
+          const initials = (u.username || '?').slice(0, 2).toUpperCase();
+          const isSelf   = u.uid === fbUid;
+          return `<div class="gc-hud-avatar${isSelf ? ' self' : ''}"
+            title="${isSelf ? 'You' : escH(u.username || 'User')}"
+            onclick="${!isSelf ? `openDmWith('${escJ(u.uid)}','${escJ(u.username||'User')}')` : ''}"
+          >${initials}<span class="gc-hud-avatar-dot"></span></div>`;
+        }).join('');
+      }
+      renderGcHudFeed();
+    }
+
+    function renderGcHudFeed() {
+      const feedEl = document.getElementById('gcHudFeed');
+      if (!feedEl) return;
+      if (!gcActivityLog.length) {
+        feedEl.innerHTML = '<div class="gc-hud-empty">No activity yet</div>';
+        return;
+      }
+      feedEl.innerHTML = gcActivityLog.map(e => {
+        const age = Date.now() - e.ts;
+        const label = age < 60000
+          ? 'just now'
+          : age < 3600000
+            ? Math.floor(age / 60000) + 'm ago'
+            : Math.floor(age / 3600000) + 'h ago';
+        return `<div class="gc-hud-feed-item">
+          <span class="gc-hud-feed-icon">${e.icon}</span>
+          <span class="gc-hud-feed-text">${escH(e.text)}</span>
+          <span class="gc-hud-feed-time">${label}</span>
+        </div>`;
+      }).join('');
     }
 
     function renderGcMessages(msgs) {
@@ -1938,6 +1994,7 @@ CRITICAL RULE: If ANYONE asks for homework help, essays, math problems, coding a
     window.openOverlay            = openOverlay;
     window.closeOverlay           = closeOverlay;
     window.selectSidebarItem      = selectSidebarItem;
+    window.gcLogActivity          = gcLogActivity;
     window.filterGames            = filterGames;
     window.setTheme               = setTheme;
     window.toggleProfileDropdown  = toggleProfileDropdown;

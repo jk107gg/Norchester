@@ -538,6 +538,10 @@
           <span class="sb-item-icon">◆</span>
           <span class="sb-item-label">Pricing</span>
         </div>
+        <div class="sb-item" id="nav-credits" onclick="selectSidebarItem(this)" data-label="Credits">
+          <span class="sb-item-icon">✦</span>
+          <span class="sb-item-label">Credits</span>
+        </div>
 
         <!-- Games list -->
         <div class="sb-label">
@@ -742,7 +746,9 @@
 
         <!-- ── Global Chat Panel ── -->
         <div class="g-panel" id="globalChatPanel">
-          <div class="ch-wrap" style="display:flex;flex-direction:column;height:100%;font-family:var(--orbit-ui);">
+
+          <!-- Main chat column -->
+          <div class="ch-wrap" style="display:flex;flex-direction:column;height:100%;font-family:var(--orbit-ui);flex:1;min-width:0;">
             <div class="gc-online-bar">
               <span class="gc-online-label">Online</span>
               <span class="gc-online-count" id="gcOnlineCount">0</span>
@@ -791,6 +797,34 @@
               </div>
             </div>
           </div>
+
+          <!-- HUD Live Activity sidebar -->
+          <aside class="gc-hud-panel" id="gcHudPanel" aria-label="Live Activity">
+
+            <!-- Users Online -->
+            <div class="gc-hud-section">
+              <div class="gc-hud-heading">
+                <span class="gc-hud-dot"></span>Users Online
+              </div>
+              <div class="gc-hud-avatars" id="gcHudAvatars">
+                <div class="gc-hud-empty">No one online</div>
+              </div>
+            </div>
+
+            <div class="gc-hud-divider"></div>
+
+            <!-- Recent Activity -->
+            <div class="gc-hud-section gc-hud-activity-section">
+              <div class="gc-hud-heading">
+                <span class="gc-hud-dot purple"></span>Activity
+              </div>
+              <div class="gc-hud-feed" id="gcHudFeed">
+                <div class="gc-hud-empty">No activity yet</div>
+              </div>
+            </div>
+
+          </aside>
+
         </div>
 
         <!-- ── DM Panel ── -->
@@ -1002,6 +1036,60 @@
         </div>
 
         <!-- ── Placeholder Panel ── -->
+        <!-- ── Credits Panel ── -->
+        <div class="g-panel" id="creditsPanel">
+          <div class="cr-scroll">
+
+            <div class="cr-hero">
+              <div class="cr-hero-eyebrow">The Team</div>
+              <h2 class="cr-hero-title">Meet Orbit's Staff</h2>
+              <p class="cr-hero-sub">The people keeping the stars aligned.</p>
+            </div>
+
+            <div class="cr-grid">
+
+              <!-- Vivex — Owner -->
+              <div class="cr-card cr-card--owner">
+                <div class="cr-card-glow"></div>
+                <div class="cr-avatar-wrap">
+                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="Vivex avatar" loading="lazy"/>
+                  <span class="cr-badge cr-badge--owner">Owner</span>
+                </div>
+                <div class="cr-name">Vivex</div>
+                <div class="cr-role">Platform Owner &amp; Founder</div>
+              </div>
+
+              <!-- FlamingoKing — Admin -->
+              <div class="cr-card cr-card--admin">
+                <div class="cr-card-glow"></div>
+                <div class="cr-avatar-wrap">
+                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="FlamingoKing avatar" loading="lazy"/>
+                  <span class="cr-badge cr-badge--admin">Admin</span>
+                </div>
+                <div class="cr-name">FlamingoKing</div>
+                <div class="cr-role">Platform Administrator</div>
+              </div>
+
+              <!-- Atl Alex — Helper -->
+              <div class="cr-card cr-card--helper">
+                <div class="cr-card-glow"></div>
+                <div class="cr-avatar-wrap">
+                  <img class="cr-avatar" src="https://via.placeholder.com/150" alt="Atl Alex avatar" loading="lazy"/>
+                  <span class="cr-badge cr-badge--helper">Helper</span>
+                </div>
+                <div class="cr-name">Atl Alex</div>
+                <div class="cr-role">Community Helper</div>
+              </div>
+
+            </div>
+
+            <div class="cr-footer">
+              Built with ♥ &nbsp;·&nbsp; Orbit &nbsp;·&nbsp; 2025
+            </div>
+
+          </div>
+        </div>
+
         <div class="g-panel" id="placeholderPanel">
           <div class="game-placeholder">
             <div class="game-placeholder-icon" id="phIcon">◈</div>
