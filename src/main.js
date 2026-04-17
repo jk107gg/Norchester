@@ -608,23 +608,48 @@
           // Clear any previous block-detection timer
           if (iframe._blockTimer) { clearTimeout(iframe._blockTimer); iframe._blockTimer = null; }
 
+          // Set sandbox + allow BEFORE assigning src — browser locks the security context
+          // at navigation time. Setting attributes after src is assigned has no effect.
+          //
+          // allow-same-origin is required for game saves (localStorage/IndexedDB).
+          // Combining it with allow-scripts triggers a browser advisory warning:
+          //   "An iframe which has both allow-scripts and allow-same-origin for its sandbox
+          //    attribute can escape its sandboxing."
+          // This warning is browser-enforced and CANNOT be suppressed from JavaScript.
+          // It is informational only and does not affect game functionality.
+          iframe.setAttribute('sandbox',
+            'allow-scripts allow-same-origin allow-forms allow-modals ' +
+            'allow-orientation-lock allow-pointer-lock allow-popups ' +
+            'allow-popups-to-escape-sandbox allow-presentation allow-downloads'
+          );
+          iframe.setAttribute('allow',
+            'autoplay; fullscreen; keyboard-map; encrypted-media; ' +
+            'gyroscope; accelerometer; gamepad; microphone; ' +
+            'clipboard-read; clipboard-write'
+          );
+
           iframe.style.display = 'block';
           iframe.src = url;
 
-          // X-Frame-Options block: browser either fires no load event, or navigates
-          // iframe to about:blank silently. We detect by checking src after a grace period.
-          // NOTE: do NOT read contentDocument — always throws SecurityError cross-origin.
+          // X-Frame-Options block detection:
+          // Blocked iframes revert src to about:blank silently — no error event fires.
+          // Check after a grace period. Never read contentDocument — always throws
+          // SecurityError cross-origin regardless of whether load succeeded.
           iframe._blockTimer = setTimeout(() => {
             iframe._blockTimer = null;
-            // If iframe is still showing (not manually hidden) but src reverted to blank,
-            // the host blocked embedding.
-            const currentSrc = iframe.src; // reflects resolved URL, blank if blocked
-            if (iframe.style.display !== 'none' &&
-                (currentSrc === 'about:blank' || currentSrc === '' || currentSrc === window.location.href)) {
+            try {
+              const cur = iframe.src;
+              if (iframe.style.display !== 'none' &&
+                  (cur === 'about:blank' || cur === '' || cur === window.location.href)) {
+                iframe.style.display = 'none';
+                if (phError) phError.style.display = 'flex';
+              }
+            } catch(e) {
+              // SecurityError reading iframe.src — treat as blocked
               iframe.style.display = 'none';
               if (phError) phError.style.display = 'flex';
             }
-          }, 4000); // 4s grace — enough for slow loads, fast enough to show fallback
+          }, 4000);
         }
       } else {
         if (iframe)         { iframe.src = 'about:blank'; iframe.style.display = 'none'; }
@@ -632,7 +657,7 @@
         if (phError)          phError.style.display = 'none';
         document.getElementById('phIcon').textContent  = g.icon;
         document.getElementById('phTitle').textContent = g.name;
-        document.getElementById('phSub').textContent   = "URL not set yet — check back soon.";
+        document.getElementById('phSub').textContent   = 'URL not set yet — check back soon.';
       }
     }
 
