@@ -292,6 +292,7 @@
       { id:33, name:'Henry Stickman 5',      cat:'Fun',     icon:'▶',  plays:1234, url:'https://henrystickmin.net/en/infiltrating-the-airship',                               desc:'Infiltrate an airship full of traps, guards, and terrible decisions.' },
       { id:34, name:'Rocket Soccer Derby',   cat:'Sports',  icon:'◎',  plays:2109, url:'https://rocketsoccerderby.gitlab.io/file/',                                           desc:'Rocket-powered cars smashing a ball into a goal. Absolute chaos.' },
       { id:35, name:'A Small World Cup',     cat:'Sports',  icon:'⚽', plays:1876, url:'/stuff/selfhosted/asmallworldcup/index.html',                                          desc:'Flick your way to World Cup glory in this tiny, addictive football game.' },
+      { id:36, name:'Getaway Shootout',      cat:'Fun',     icon:'🔫', plays:3041, url:'https://getaway-shootout.game-files.crazygames.com/unity/unity2020/getaway-shootout.html?isNewUser=true&skipPrerollFirstSession=true&v=1.355', desc:'Race to the getaway vehicle while blasting anyone in your way.' },
     ];
 
     const CAT_COLORS = {
