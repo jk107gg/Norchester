@@ -15,7 +15,9 @@
       "Bash(python C:\\\\temp\\\\patch_orbit.py)",
       "Bash(python \"C:\\\\temp\\\\patch_orbit.py\")",
       "Bash(set PYTHONIOENCODING=utf-8)",
-      "Bash(python \"C:\\\\temp\\\\fix_games.py\")"
+      "Bash(python \"C:\\\\temp\\\\fix_games.py\")",
+      "Bash(python \"C:\\\\temp\\\\gen_games2.py\")",
+      "Bash(python \"C:\\\\temp\\\\replace_games.py\")"
     ]
   }
 }
