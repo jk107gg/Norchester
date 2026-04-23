@@ -178,7 +178,7 @@
         const phError   = document.getElementById('phIframeError');
         if (iframe) {
           if (iframe._blockTimer) { clearTimeout(iframe._blockTimer); iframe._blockTimer = null; }
-          iframe.src = 'about:blank'; iframe.style.display = 'none';
+          iframe.srcdoc = ''; iframe.src = 'about:blank'; iframe.style.display = 'none';
         }
         if (phContent) phContent.style.display = '';
         if (phError)   phError.style.display = 'none';
@@ -1395,31 +1395,53 @@
             'clipboard-read; clipboard-write'
           );
 
+          iframe.srcdoc = '';
           iframe.style.display = 'block';
-          iframe.src = url;
+
+          // jsdelivr serves HTML as text/plain — browser shows raw source instead of rendering.
+          // Fix: fetch the HTML, inject a <base> tag for relative URL resolution, use srcdoc.
+          if (url.includes('cdn.jsdelivr.net/gh/freebuisness/html')) {
+            iframe.removeAttribute('src');
+            iframe.srcdoc = '<html><body style="background:#000;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0">Loading…</body></html>';
+            fetch(url)
+              .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+              .then(html => {
+                const base = `<base href="${url}">`;
+                const modified = html.includes('<head>')
+                  ? html.replace('<head>', '<head>' + base)
+                  : base + html;
+                iframe.srcdoc = modified;
+              })
+              .catch(() => { iframe.srcdoc = ''; iframe.src = url; });
+          } else {
+            iframe.src = url;
+          }
 
           // X-Frame-Options block detection:
           // Blocked iframes revert src to about:blank silently — no error event fires.
           // Check after a grace period. Never read contentDocument — always throws
           // SecurityError cross-origin regardless of whether load succeeded.
-          iframe._blockTimer = setTimeout(() => {
-            iframe._blockTimer = null;
-            try {
-              const cur = iframe.src;
-              if (iframe.style.display !== 'none' &&
-                  (cur === 'about:blank' || cur === '' || cur === window.location.href)) {
+          // Skip block-detection for srcdoc games (src stays about:blank intentionally)
+          if (!url.includes('cdn.jsdelivr.net/gh/freebuisness/html')) {
+            iframe._blockTimer = setTimeout(() => {
+              iframe._blockTimer = null;
+              try {
+                const cur = iframe.src;
+                if (iframe.style.display !== 'none' &&
+                    (cur === 'about:blank' || cur === '' || cur === window.location.href)) {
+                  iframe.style.display = 'none';
+                  if (phError) phError.style.display = 'flex';
+                }
+              } catch(e) {
+                // SecurityError reading iframe.src — treat as blocked
                 iframe.style.display = 'none';
                 if (phError) phError.style.display = 'flex';
               }
-            } catch(e) {
-              // SecurityError reading iframe.src — treat as blocked
-              iframe.style.display = 'none';
-              if (phError) phError.style.display = 'flex';
-            }
-          }, 4000);
+            }, 4000);
+          }
         }
       } else {
-        if (iframe)         { iframe.src = 'about:blank'; iframe.style.display = 'none'; }
+        if (iframe)         { iframe.srcdoc = ''; iframe.src = 'about:blank'; iframe.style.display = 'none'; }
         if (phContent)      { phContent.style.display = ''; }
         if (phError)          phError.style.display = 'none';
         document.getElementById('phIcon').textContent  = g.icon;
