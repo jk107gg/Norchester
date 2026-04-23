@@ -21,11 +21,9 @@ export default defineConfig({
     },
   ],
   server: {
-    headers: {
-      // Required for SharedArrayBuffer (Unity multithreading)
-      'Cross-Origin-Opener-Policy':   'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-    },
+    // COOP/COEP removed — 'require-corp' blocks cross-origin images and iframes
+    // (TMDB posters, video embeds). Unity SharedArrayBuffer needs these headers
+    // but they must be set per-asset on the CDN/S3 side in production, not globally.
   },
   assetsInclude: ['**/*.wasm', '**/*.unityweb', '**/*.data'],
 })

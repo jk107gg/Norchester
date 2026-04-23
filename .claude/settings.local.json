@@ -4,7 +4,9 @@
       "Bash(python -c ':*)",
       "Bash(dir \"D:\\\\Orbit Vite Edition\" /b)",
       "mcp__Claude_Preview__preview_start",
-      "Bash(claude plugin:*)"
+      "Bash(claude plugin:*)",
+      "Bash(npm run *)",
+      "Bash(npx vite *)"
     ]
   }
 }

@@ -154,15 +154,17 @@
       const isAiChat      = (el.id === 'nav-aichat');
       const isGlobalChat  = (el.id === 'nav-globalchat');
       const isDm          = (el.id === 'nav-dm');
+      const isMovies      = (el.id === 'nav-movies');
       const isSettings    = (el.id === 'nav-settings');
       const isSuggestions = (el.id === 'nav-suggestions');
       const isPricing     = (el.id === 'nav-pricing');
       const isCredits     = (el.id === 'nav-credits');
-      const isPlaceholder = !isHome && !isAiChat && !isGlobalChat && !isDm && !isSettings && !isSuggestions && !isPricing && !isCredits;
+      const isPlaceholder = !isHome && !isAiChat && !isGlobalChat && !isDm && !isMovies && !isSettings && !isSuggestions && !isPricing && !isCredits;
       document.getElementById('homePanel').classList.toggle('active', isHome);
       document.getElementById('aiChatPanel').classList.toggle('active', isAiChat);
       document.getElementById('globalChatPanel').classList.toggle('active', isGlobalChat);
       document.getElementById('dmPanel').classList.toggle('active', isDm);
+      document.getElementById('moviesPanel').classList.toggle('active', isMovies);
       document.getElementById('settingsPanel').classList.toggle('active', isSettings);
       document.getElementById('suggestionsPanel').classList.toggle('active', isSuggestions);
       document.getElementById('pricingPanel').classList.toggle('active', isPricing);
@@ -187,6 +189,7 @@
       if (isAiChat)       initAcGlow();
       if (isGlobalChat)   initGlobalChat();
       if (isDm)           initDmPanel();
+      if (isMovies)       initMoviesPanel();
       if (isSettings)     initSettingsPanel();
       if (isSuggestions)  initSuggestionsPanel();
       if (isPricing)      initPricingPanel();
@@ -1520,11 +1523,29 @@
 
     let dmCurrentUid  = null;
     let dmCurrentName = null;
-    let dmListener    = null;
+    let dmListener    = null;  // callback ref returned by .on()
+    let dmRef         = null;  // exact query ref used to attach — required for correct .off()
     let dmTypingTimer = null;
     let dmIsTyping    = false;
 
     function initDmPanel() {
+      if (!isRegistered) {
+        // Show locked state inside DM panel + open auth modal on top
+        const list = document.getElementById('dmUserList');
+        if (list) list.innerHTML = '';
+        const nochat = document.getElementById('dmNochat');
+        const msgArea = document.getElementById('dmMsgArea');
+        if (nochat) {
+          nochat.style.display = 'flex';
+          const icon  = document.getElementById('dmNochatIcon')  || nochat.querySelector('.dm-no-chat-icon');
+          const label = document.getElementById('dmNochatLabel') || nochat.querySelector('.dm-no-chat-text');
+          if (icon)  icon.textContent  = '🔒';
+          if (label) label.textContent = 'Sign in to use Direct Messages';
+        }
+        if (msgArea) msgArea.style.display = 'none';
+        showAuthModal('signin');
+        return;
+      }
       ensureFirebase();
       renderDmSidebar();
     }
@@ -1545,27 +1566,34 @@
       ).join('');
     }
 
-    function dmConvId(a, b) { return [a,b].sort().join('__'); }
+    // Canonical room ID: sort both UIDs so both users always resolve the same path
+    function dmConvId(a, b) { return [a, b].sort().join('__'); }
 
     function openDmWith(uid, username) {
-      // Ensure DM panel is visible
+      if (!isRegistered) {
+        showAuthModal('signin');
+        return;
+      }
       if (!document.getElementById('dmPanel').classList.contains('active')) {
         selectSidebarItem(document.getElementById('nav-dm'));
       }
       if (dmCurrentUid === uid) return;
-      // Detach previous listener
-      if (dmListener && dmCurrentUid) {
-        fbDb?.ref('dm/' + dmConvId(fbUid, dmCurrentUid) + '/messages').off('value', dmListener);
+
+      // Detach previous listener using the EXACT query ref it was attached on.
+      // Calling .off() on a new base ref (without .limitToLast) won't match the
+      // original query ref and the old listener silently keeps firing.
+      if (dmRef && dmListener) {
+        dmRef.off('value', dmListener);
+        dmRef     = null;
         dmListener = null;
       }
+
       dmCurrentUid = uid; dmCurrentName = username;
       renderDmSidebar();
 
-      // Show message area
-      document.getElementById('dmNochat').style.display   = 'none';
-      document.getElementById('dmMsgArea').style.display  = 'flex';
+      document.getElementById('dmNochat').style.display  = 'none';
+      document.getElementById('dmMsgArea').style.display = 'flex';
 
-      // Header
       const isOnline = gcOnlineUsers[uid]?.online;
       document.getElementById('dmHeader').innerHTML = `
         <div class="dm-header-dot" style="${isOnline?'':'background:rgba(255,255,255,0.16)'}"></div>
@@ -1574,12 +1602,14 @@
           <div class="dm-header-status">${isOnline?'Online':'Last seen recently'}</div>
         </div>`;
 
-      // Messages listener
+      // Store the query ref so .off() can target the same object later
       const convId = dmConvId(fbUid, uid);
-      dmListener = fbDb.ref('dm/'+convId+'/messages').limitToLast(60).on('value', snap => {
+      dmRef = fbDb.ref('dms/' + convId + '/messages').limitToLast(60);
+      dmListener = dmRef.on('value', snap => {
         const msgs = [];
-        snap.forEach(c => msgs.push({ id:c.key, ...c.val() }));
-        renderDmMessages(msgs);
+        snap.forEach(c => msgs.push({ id: c.key, ...c.val() }));
+        dmPruneOld(convId, msgs); // delete messages older than DM_TTL_MS
+        renderDmMessages(msgs.filter(m => !m.timestamp || (Date.now() - m.timestamp) < DM_TTL_MS));
       });
     }
 
@@ -1616,22 +1646,62 @@
       if (atBottom) c.scrollTop = c.scrollHeight;
     }
 
+    // Messages older than this are auto-deleted when the conversation loads
+    const DM_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+    function dmPruneOld(convId, msgs) {
+      const cutoff = Date.now() - DM_TTL_MS;
+      msgs.forEach(msg => {
+        if (msg.timestamp && msg.timestamp < cutoff) {
+          fbDb.ref('dms/' + convId + '/messages/' + msg.id).remove()
+            .catch(() => {}); // silent — best-effort cleanup
+        }
+      });
+    }
+
+    function dmShowError(msg) {
+      const el = document.getElementById('dmSendError');
+      if (!el) return;
+      el.textContent = '⚠ ' + msg;
+      el.style.display = 'block';
+      clearTimeout(el._hideTimer);
+      el._hideTimer = setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
     function dmSend() {
-      if (!fbDb || !dmCurrentUid) return;
-      const ta = document.getElementById('dmTextarea');
+      const errEl = document.getElementById('dmSendError');
+      if (errEl) errEl.style.display = 'none';
+
+      if (!fbDb) { dmShowError('Not connected — reopen Orbit to reconnect'); return; }
+      if (!dmCurrentUid) { dmShowError('Select a user first'); return; }
+
+      const ta   = document.getElementById('dmTextarea');
       const text = ta.value.trim();
       if (!text) return;
-      fbDb.ref('dm/'+dmConvId(fbUid,dmCurrentUid)+'/messages').push({
-        uid: fbUid, username: fbUsername,
+
+      const convId = dmConvId(fbUid, dmCurrentUid);
+      fbDb.ref('dms/' + convId + '/messages').push({
+        uid:       fbUid,
+        username:  fbUsername,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
         text,
+      }).then(() => {
+        // Clear only after Firebase confirms — input preserved on failure
+        ta.value        = '';
+        ta.style.height = '';
+        dmUpdateSendBtn();
+      }).catch(err => {
+        console.error('DM send failed:', err);
+        dmShowError('Failed to send — check connection');
       });
-      ta.value = ''; ta.style.height = ''; dmUpdateSendBtn();
     }
 
     function dmKeydown(e) {
       e.stopPropagation();
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); dmSend(); }
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        dmSend();
+      }
     }
     function dmOnInput(ta) {
       ta.style.height = 'auto';
@@ -2203,6 +2273,196 @@
       } catch(e){}
     })();
 
+    // ══════════════════════════════════════════════════════════════════
+    //  MOVIES PANEL
+    // ══════════════════════════════════════════════════════════════════
+    const TMDB_KEY = 'fb7bb23f03b6994dafc674c074d01761';
+    const MOVIE_SOURCES = [
+      { id:'vidlink',      name:'VidLink',      movie:'https://vidlink.pro/movie/{id}',                           tv:'https://vidlink.pro/tv/{id}/{season}/{episode}' },
+      { id:'vidsrcxyz',   name:'VidSrc.xyz',   movie:'https://vidsrc.xyz/embed/movie/{id}',                      tv:'https://vidsrc.xyz/embed/tv/{id}/{season}/{episode}' },
+      { id:'videasy',     name:'VidEasy',      movie:'https://player.videasy.net/movie/{id}?color=4f8ef7',       tv:'https://player.videasy.net/tv/{id}/{season}/{episode}?color=4f8ef7' },
+      { id:'embedmaster', name:'EmbedMaster',  movie:'https://embedmaster.link/movie/{id}',                      tv:'https://embedmaster.link/tv/{id}/{season}/{episode}' },
+      { id:'vidsrcrip',   name:'VidSrc.rip',   movie:'https://vidsrc.rip/embed/movie/{id}',                      tv:'https://vidsrc.rip/embed/tv/{id}/{season}/{episode}' },
+    ];
+
+    let moviesTabType   = 'movie'; // 'movie' | 'tv'
+    let moviesPageNum   = 1;
+    let moviesQuery     = '';
+    let moviesReady     = false;
+    let watchSource     = MOVIE_SOURCES[0].id;
+    let watchContentId  = null;
+    let watchType       = null;
+    let watchSeason     = 1;
+    let watchEpisode    = 1;
+
+    function initMoviesPanel() {
+      if (moviesReady) return;
+      moviesReady = true;
+      moviesFetch();
+    }
+
+    async function moviesFetch() {
+      const status = document.getElementById('moviesStatus');
+      const grid   = document.getElementById('moviesGrid');
+      if (status) status.textContent = 'Loading…';
+      if (grid)   grid.innerHTML = '';
+      const endpoint = moviesQuery.trim()
+        ? `search/${moviesTabType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(moviesQuery)}&page=${moviesPageNum}`
+        : `${moviesTabType}/popular?api_key=${TMDB_KEY}&page=${moviesPageNum}`;
+      try {
+        const res  = await fetch(`https://api.themoviedb.org/3/${endpoint}`);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        moviesRender(data.results || []);
+        const pageEl = document.getElementById('moviesPageNum');
+        if (pageEl) pageEl.textContent = moviesPageNum;
+        if (status) status.textContent = (data.results?.length || 0) + ' results';
+      } catch(e) {
+        if (status) status.textContent = 'Failed — ' + e.message;
+      }
+    }
+
+    function moviesRender(items) {
+      const grid = document.getElementById('moviesGrid');
+      if (!grid) return;
+      if (!items.length) { grid.innerHTML = '<div class="movies-empty">No results found</div>'; return; }
+      grid.innerHTML = items.map(item => {
+        const title  = escH(item.title || item.name || 'Untitled');
+        const poster = item.poster_path ? `https://image.tmdb.org/t/p/w300${item.poster_path}` : '';
+        const yr     = (item.release_date || item.first_air_date || '').slice(0, 4);
+        const type   = moviesTabType;
+        return `<button class="movies-card" onclick="moviesWatch(${item.id},'${type}')">
+          ${poster
+            ? `<img class="movies-card-img" src="${poster}" alt="${title}" onerror="this.style.opacity='0.3'">`
+            : `<div class="movies-card-img movies-card-no-img">${title.charAt(0)}</div>`}
+          <div class="movies-card-info">
+            <div class="movies-card-title">${title}</div>
+            ${yr ? `<div class="movies-card-year">${yr}</div>` : ''}
+          </div>
+        </button>`;
+      }).join('');
+    }
+
+    function moviesSetTab(tab) {
+      moviesTabType = tab;
+      moviesPageNum = 1;
+      document.getElementById('moviesTabMovie')?.classList.toggle('active', tab === 'movie');
+      document.getElementById('moviesTabTv')?.classList.toggle('active',   tab === 'tv');
+      moviesFetch();
+    }
+
+    function moviesOnSearch(val) {
+      moviesQuery   = val;
+      moviesPageNum = 1;
+      moviesFetch();
+    }
+
+    function moviesPage(dir) {
+      if (dir < 0 && moviesPageNum <= 1) return;
+      moviesPageNum += dir;
+      moviesFetch();
+    }
+
+    async function moviesWatch(contentId, contentType) {
+      watchContentId = contentId;
+      watchType      = contentType;
+      watchSeason    = 1;
+      watchEpisode   = 1;
+
+      document.getElementById('moviesBrowse').style.display = 'none';
+      document.getElementById('moviesWatch').style.display  = 'flex';
+
+      // Populate source selector
+      const sel = document.getElementById('moviesSourceSel');
+      if (sel) sel.innerHTML = MOVIE_SOURCES.map(s =>
+        `<option value="${s.id}"${s.id === watchSource ? ' selected' : ''}>${escH(s.name)}</option>`
+      ).join('');
+
+      const titleEl    = document.getElementById('moviesWatchTitle');
+      const metaEl     = document.getElementById('moviesWatchMeta');
+      const overviewEl = document.getElementById('moviesOverview');
+      const seasonRow  = document.getElementById('moviesSeasonRow');
+      const epGrid     = document.getElementById('moviesEpGrid');
+      if (titleEl)    titleEl.textContent    = 'Loading…';
+      if (seasonRow)  seasonRow.style.display = 'none';
+      if (epGrid)     epGrid.style.display    = 'none';
+
+      try {
+        const res  = await fetch(`https://api.themoviedb.org/3/${contentType}/${contentId}?api_key=${TMDB_KEY}`);
+        const data = await res.json();
+        const title = data.title || data.name || 'Watch';
+        const yr    = (data.release_date || data.first_air_date || '').slice(0, 4);
+        if (titleEl)    titleEl.textContent    = title;
+        if (metaEl)     metaEl.textContent     = yr || '';
+        if (overviewEl) overviewEl.textContent = data.overview || '';
+
+        if (contentType === 'tv') {
+          seasonRow.style.display = 'flex';
+          seasonRow.innerHTML = Array.from({ length: data.number_of_seasons || 0 }, (_, i) => i + 1)
+            .map(n => `<button class="movies-season-btn${n === 1 ? ' active' : ''}" onclick="moviesPickSeason(${n},this)">S${n}</button>`)
+            .join('');
+          await moviesLoadSeason(1);
+        } else {
+          moviesUpdateFrame();
+        }
+      } catch(e) {
+        if (titleEl) titleEl.textContent = 'Failed to load';
+      }
+    }
+
+    async function moviesLoadSeason(season) {
+      watchSeason  = season;
+      watchEpisode = 1;
+      try {
+        const res  = await fetch(`https://api.themoviedb.org/3/tv/${watchContentId}/season/${season}?api_key=${TMDB_KEY}`);
+        const data = await res.json();
+        const epGrid = document.getElementById('moviesEpGrid');
+        if (epGrid) {
+          epGrid.style.display = 'flex';
+          epGrid.innerHTML = (data.episodes || []).map(ep =>
+            `<button class="movies-ep-btn${ep.episode_number === 1 ? ' active' : ''}" onclick="moviesPickEp(${ep.episode_number},this)">Ep ${ep.episode_number}${ep.name ? ' · ' + escH(ep.name) : ''}</button>`
+          ).join('');
+        }
+      } catch(e) {}
+      moviesUpdateFrame();
+    }
+
+    function moviesPickSeason(n, btn) {
+      document.querySelectorAll('.movies-season-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      moviesLoadSeason(n);
+    }
+
+    function moviesPickEp(n, btn) {
+      document.querySelectorAll('.movies-ep-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      watchEpisode = n;
+      moviesUpdateFrame();
+    }
+
+    function moviesSetSource(id) {
+      watchSource = id;
+      moviesUpdateFrame();
+    }
+
+    function moviesUpdateFrame() {
+      const src      = MOVIE_SOURCES.find(s => s.id === watchSource) || MOVIE_SOURCES[0];
+      const template = watchType === 'tv' ? src.tv : src.movie;
+      const url      = template
+        .replace('{id}',      watchContentId)
+        .replace('{season}',  watchSeason)
+        .replace('{episode}', watchEpisode);
+      const frame = document.getElementById('moviesFrame');
+      if (frame) frame.src = url;
+    }
+
+    function moviesBack() {
+      const frame = document.getElementById('moviesFrame');
+      if (frame) frame.src = 'about:blank';
+      document.getElementById('moviesWatch').style.display  = 'none';
+      document.getElementById('moviesBrowse').style.display = 'flex';
+    }
+
     // ── Vite Compliance: expose all onclick handlers on window ────────
     window.switchPage             = switchPage;
     window.openLogin              = openLogin;
@@ -2272,6 +2532,14 @@
     window.sugCharCount           = sugCharCount;
     window.submitSuggestion       = submitSuggestion;
     window.voteSuggestion         = voteSuggestion;
+    window.moviesSetTab           = moviesSetTab;
+    window.moviesOnSearch         = moviesOnSearch;
+    window.moviesPage             = moviesPage;
+    window.moviesWatch            = moviesWatch;
+    window.moviesPickSeason       = moviesPickSeason;
+    window.moviesPickEp           = moviesPickEp;
+    window.moviesSetSource        = moviesSetSource;
+    window.moviesBack             = moviesBack;
 
     // ── Keyboard Shortcuts ───────────────────────────────────────────
     document.addEventListener('keydown', function(e) {

@@ -522,6 +522,10 @@
           <span class="sb-item-icon">◈</span>
           <span class="sb-item-label">Direct Messages</span>
         </div>
+        <div class="sb-item" id="nav-movies" onclick="selectSidebarItem(this)" data-label="Movies">
+          <span class="sb-item-icon">🎬</span>
+          <span class="sb-item-label">Movies</span>
+        </div>
         <div class="sb-item" id="nav-settings" onclick="selectSidebarItem(this)" data-label="Settings">
           <span class="sb-item-icon">⚙</span>
           <span class="sb-item-label">Settings</span>
@@ -534,7 +538,7 @@
           <span class="sb-item-icon">◇</span>
           <span class="sb-item-label">Suggestions</span>
         </div>
-        <div class="sb-item" id="nav-pricing" onclick="selectSidebarItem(this)" data-label="Pricing">
+        <div class="sb-item" id="nav-pricing" onclick="selectSidebarItem(this)" data-label="Pricing" style="display:none">
           <span class="sb-item-icon">◆</span>
           <span class="sb-item-label">Pricing</span>
         </div>
@@ -874,6 +878,7 @@
                     <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M5.5 1L2 4.5M5.5 1L9 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
                 </div>
+                <div id="dmSendError" style="display:none;font-size:0.6rem;color:rgba(248,113,113,0.8);padding:0.18rem 0.2rem 0;font-family:var(--orbit-ui)">⚠ Failed to send — check connection</div>
               </div>
             </div>
           </div>
@@ -1051,6 +1056,56 @@
               </div>
             </div>
             <div class="pr-cards" id="prCards"></div>
+          </div>
+        </div>
+
+        <!-- ── Movies Panel ── -->
+        <div class="g-panel" id="moviesPanel">
+          <div class="movies-wrap">
+            <!-- Browse view -->
+            <div class="movies-browse" id="moviesBrowse">
+              <div class="movies-top">
+                <div class="home-search-wrap">
+                  <span class="home-search-icon">⌕</span>
+                  <input class="home-search-input" id="moviesSearchInput" type="text"
+                    placeholder="Search movies &amp; shows…"
+                    oninput="moviesOnSearch(this.value)"
+                    onkeydown="event.stopPropagation();" />
+                </div>
+                <div class="movies-tab-row">
+                  <button class="movies-tab active" id="moviesTabMovie" onclick="moviesSetTab('movie')">Movies</button>
+                  <button class="movies-tab" id="moviesTabTv" onclick="moviesSetTab('tv')">TV &amp; Shows</button>
+                </div>
+              </div>
+              <div class="movies-grid" id="moviesGrid"></div>
+              <div class="movies-footer">
+                <div class="movies-status" id="moviesStatus">Loading…</div>
+                <div class="movies-pager">
+                  <button class="movies-page-btn" onclick="moviesPage(-1)">← Prev</button>
+                  <span class="movies-page-num" id="moviesPageNum">1</span>
+                  <button class="movies-page-btn" onclick="moviesPage(1)">Next →</button>
+                </div>
+              </div>
+            </div>
+            <!-- Watch view -->
+            <div class="movies-watch" id="moviesWatch">
+              <div class="movies-watch-chrome">
+                <button class="movies-back" onclick="moviesBack()">← Back</button>
+                <div class="movies-watch-info">
+                  <div class="movies-watch-title" id="moviesWatchTitle">—</div>
+                  <div class="movies-watch-meta" id="moviesWatchMeta"></div>
+                </div>
+                <select class="movies-source-sel" id="moviesSourceSel" onchange="moviesSetSource(this.value)"></select>
+              </div>
+              <div class="movies-player">
+                <iframe id="moviesFrame" class="movies-frame"
+                  allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                  allowfullscreen></iframe>
+              </div>
+              <div class="movies-season-row" id="moviesSeasonRow"></div>
+              <div class="movies-ep-grid" id="moviesEpGrid"></div>
+              <div class="movies-overview" id="moviesOverview"></div>
+            </div>
           </div>
         </div>
 
