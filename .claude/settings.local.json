@@ -6,7 +6,15 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(claude plugin:*)",
       "Bash(npm run *)",
-      "Bash(npx vite *)"
+      "Bash(npx vite *)",
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "Bash(curl -s \"https://cdn.jsdelivr.net/gh/freebuisness/assets@latest/zones.json\")",
+      "Bash(python -c \"import json,sys; data=json.load\\(sys.stdin\\); games=[g for g in data if 'SUGGEST' not in g.get\\('name',''\\) and 'comments' not in g.get\\('name',''\\).lower\\(\\)]; print\\(f'Total: {len\\(games\\)}'\\); [print\\(f'{i+37}|{g[\\\\\"name\\\\\"]}|{g.get\\(\\\\\"url\\\\\",\\\\\"\\\\\"\\)}'\\) for i,g in enumerate\\(games\\)]\")",
+      "Bash(python -c \"import json,sys; data=json.load\\(sys.stdin\\); games=[g for g in data if 'SUGGEST' not in g.get\\('name',''\\) and 'comments' not in g.get\\('name',''\\).lower\\(\\)]; [print\\(f'{i+37}|{g[\\\\\"name\\\\\"]}|{g.get\\(\\\\\"url\\\\\",\\\\\"\\\\\"\\)}'\\) for i,g in enumerate\\(games\\)]\")",
+      "PowerShell(python C:\\\\temp\\\\gen_games2.py)",
+      "Bash(python C:\\\\temp\\\\patch_orbit.py)",
+      "Bash(python \"C:\\\\temp\\\\patch_orbit.py\")",
+      "Bash(set PYTHONIOENCODING=utf-8)"
     ]
   }
 }
