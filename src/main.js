@@ -2306,17 +2306,23 @@
       const grid   = document.getElementById('moviesGrid');
       if (status) status.textContent = 'Loading…';
       if (grid)   grid.innerHTML = '';
-      const endpoint = moviesQuery.trim()
-        ? `search/${moviesTabType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(moviesQuery)}&page=${moviesPageNum}`
-        : `${moviesTabType}/popular?api_key=${TMDB_KEY}&page=${moviesPageNum}`;
+      // Fetch 2 TMDB pages at once (40 results) to fill the grid
+      const apiPage1 = (moviesPageNum - 1) * 2 + 1;
+      const apiPage2 = apiPage1 + 1;
+      function buildUrl(pg) {
+        return moviesQuery.trim()
+          ? `https://api.themoviedb.org/3/search/${moviesTabType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(moviesQuery)}&page=${pg}`
+          : `https://api.themoviedb.org/3/${moviesTabType}/popular?api_key=${TMDB_KEY}&page=${pg}`;
+      }
       try {
-        const res  = await fetch(`https://api.themoviedb.org/3/${endpoint}`);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-        moviesRender(data.results || []);
+        const [r1, r2] = await Promise.all([fetch(buildUrl(apiPage1)), fetch(buildUrl(apiPage2))]);
+        if (!r1.ok) throw new Error('HTTP ' + r1.status);
+        const [d1, d2] = await Promise.all([r1.json(), r2.ok ? r2.json() : Promise.resolve({ results: [] })]);
+        const items = [...(d1.results || []), ...(d2.results || [])];
+        moviesRender(items);
         const pageEl = document.getElementById('moviesPageNum');
         if (pageEl) pageEl.textContent = moviesPageNum;
-        if (status) status.textContent = (data.results?.length || 0) + ' results';
+        if (status) status.textContent = items.length + ' results';
       } catch(e) {
         if (status) status.textContent = 'Failed — ' + e.message;
       }
