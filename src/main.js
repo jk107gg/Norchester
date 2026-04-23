@@ -1246,7 +1246,7 @@
             <div class="gc-info">
               <div class="gc-name" title="${g.name}">${g.name}</div>
               <div class="gc-meta">
-                <span class="gc-tag" style="background:${cc.bg};color:${cc.text}">${g.cat}</span>
+                <span class="gc-tag" style="--tag-bg:${cc.bg};color:${cc.text}">${g.cat}</span>
                 <span class="gc-plays">${fmtPlays(g.plays)}</span>
               </div>
             </div>
