@@ -1415,8 +1415,12 @@
               .then(html => {
                 const base = `<base href="${url}">`;
                 // Disable SW registration: srcdoc origin ≠ CDN origin → SecurityError
-                const swFix = `<script>try{if('serviceWorker' in navigator){navigator.serviceWorker.register=()=>Promise.resolve({scope:'/',active:null,installing:null,waiting:null});}}catch(e){}<\/script>`;
-                const inject = base + swFix;
+                // Patch postMessage: ytgame.js calls parent.postMessage(data,'') → SyntaxError
+                const patches = `<script>
+try{if('serviceWorker' in navigator){navigator.serviceWorker.register=()=>Promise.resolve({scope:'/',active:null,installing:null,waiting:null});}}catch(e){}
+try{const _pm=window.postMessage.bind(window);window.postMessage=function(m,o,t){try{_pm(m,o||'*',t);}catch(e){}};if(window.parent&&window.parent!==window){const _ppm=window.parent.postMessage.bind(window.parent);window.parent.postMessage=function(m,o,t){try{_ppm(m,o||'*',t);}catch(e){}};}}catch(e){}
+<\/script>`;
+                const inject = base + patches;
                 const modified = html.includes('<head>')
                   ? html.replace('<head>', '<head>' + inject)
                   : inject + html;
@@ -2632,8 +2636,15 @@
           updateProfileDisplay(); closeAuthModal();
         }
       } catch(err) {
-        errEl.textContent = 'Something went wrong. Try again.';
-        console.warn('auth error', err);
+        const code = err?.code || err?.message || String(err);
+        if (code.includes('PERMISSION_DENIED') || code.includes('permission_denied')) {
+          errEl.textContent = 'Database permission denied — Firebase rules need updating.';
+        } else if (code.includes('network') || code.includes('fetch')) {
+          errEl.textContent = 'Network error — check your connection.';
+        } else {
+          errEl.textContent = 'Error: ' + code.slice(0, 80);
+        }
+        console.error('auth error', err);
       } finally {
         btn.disabled = false;
       }
